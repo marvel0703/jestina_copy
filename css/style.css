@@ -1,0 +1,56 @@
+ /*노멀라이징*/
+ *{
+    padding:0;
+    margin:0;
+  }
+a{
+  color:inherit;
+  text-decoration:none;
+}
+ul,li{
+  list-style:none;
+}
+
+/*라이브러리*/
+.cell{
+  float:left;
+}
+.cell-r{
+  float:right;
+}
+
+.row::after{
+  clear:both;
+  content:"";
+  display:block;
+}
+
+.con{
+  width:1140px;
+  margin:0 auto;
+}
+
+/*스타일*/
+.main-top{
+ width:100%;
+ height: 60px;
+ background-color: #ecdfce;
+ text-align: center;
+}
+
+
+
+   .logo-wrap>.logo{
+       margin: 0 auto;
+       margin-top: 25px;
+       margin-left: 20px;
+       margin-right: 20px;
+   }
+   .logo-wrap>.icon-search{
+       
+   }
+   .logo-wrap>.search{
+width: 150px;
+height: 50px;
+border-bottom: 2px solid pink;
+   }
