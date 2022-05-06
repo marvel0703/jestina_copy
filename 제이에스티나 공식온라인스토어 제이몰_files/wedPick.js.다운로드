@@ -1,0 +1,185 @@
+$(document).ready(function () {
+    getWedPick();
+    getWedPickPopup();
+    getWedPickEvent();
+});
+
+var getWedPickData = {
+    name: 'BLACK 카드지갑',
+    discount: '50',
+    priceOrigin: '68,000',
+    price: '34,000',
+    // img: 'https://webimg.jestina.co.kr/UpData/jestina/wedPick/220419/onePick_banner.jpg', 
+    popupImg: 'https://webimg.jestina.co.kr/UpData/jestina/wedPick/220419/onePick_popup.jpg',
+    productsUrl: 'https://www.jestina.co.kr/event/pages/nego_pick',
+    // productsTargetUrl: 'https://www.jestina.co.kr/event/pages/nego_pick#link0',
+    productsTargetUrl: 'https://www.jestina.co.kr/products/view/G2000024975',
+    eventImg: 'https://webimg.jestina.co.kr/UpData/jestina/wedPick/220419/onePick_pc.jpg'
+};
+
+function getWedPick() {
+
+    var itemHtml = '';
+
+    itemHtml += '<div class="section-inner">';
+
+    itemHtml += '<a href="' + getWedPickData.productsUrl + '" class="product-url">'
+        + '<h2 class="wedPick-item__title">네고픽</h2>'
+        + '<div class="wedPick-count js-wedPick-count"><ul><li class="wedPick-hrs" id="js-wedPick-hrs">0</li> <li class="wedPick-min" id="js-wedPick-min">0</li> <li class="wedPick-sec" id="js-wedPick-sec">0</li> </ul></div>'
+        + '<div class="wedPic-item__wrap">'
+        // + '<img src="' + getWedPickData.img + '" alt="' + getWedPickData.name + '" class="wedPick-item__thumb" >'
+        + '</div>'
+        + '<div class="wedPick__desc">'
+        + '<div class="wedPick__desc-inner">'
+        + '<strong style="font-size: 16px;"> ' + getWedPickData.name + '</strong>'
+        + '<p><b class="price">' + getWedPickData.price + '</b><span>원</span><span class="origin-price">' + getWedPickData.priceOrigin + '</span><i class="discount-num">' + getWedPickData.discount + '<small>%</small></i></p>'
+        + '</div>'
+        + '</div>'
+        + '</a>'
+
+    itemHtml += '</div>';
+
+    $(".wedPick-item").addClass('basic-wedPick__item');
+    $(".wedPick-item").prepend(itemHtml);
+}
+
+function getWedPickPopup() {
+    var itemHtml = '';
+    itemHtml += '<div class="wedPick-popup__wrap js-wedPick-popup__wrap">';
+    itemHtml += '<div class="inner">'
+    itemHtml += '<a href="' + getWedPickData.productsUrl + '">'
+        + '<img src="' + getWedPickData.popupImg + '" alt="' + getWedPickData.name + '">'
+        + '<div class="wedPick-count js-wedPick-count"><ul><li class="wedPick-hrs" id="js-wedPick-hrs">0</li> <li class="wedPick-min" id="js-wedPick-min">0</li> <li class="wedPick-sec" id="js-wedPick-sec">0</li> </ul></div>'
+        + '</a>'
+        + '<a href="#" class="wedPick-close__btn js-wedPick-close__btn"> 닫기 </a>'
+    itemHtml += '</div>';
+    itemHtml += '</div>';
+
+    $("#wrap.main").after(itemHtml);
+
+    /*수요픽 닫기 버튼*/
+    $('.js-wedPick-close__btn').click(function (e) {
+        e.preventDefault();
+        $('.js-wedPick-popup__wrap').fadeOut();
+    });
+}
+
+function getWedPickEvent() {
+
+    var itemHtml = '';
+
+    itemHtml += '<div class="event-inner">';
+
+    itemHtml += '<div class="wedPick-count js-wedPick-count"><ul><li class="wedPick-hrs" id="js-wedPick-hrs">0</li> <li class="wedPick-min" id="js-wedPick-min">0</li> <li class="wedPick-sec" id="js-wedPick-sec">0</li> </ul></div>'
+        + '<div class="wedPic-item__wrap">'
+        + '<img src="' + getWedPickData.eventImg + '" alt="' + getWedPickData.name + '" class="wedPick-item__thumb">'
+        + '</div>'
+        + '<a href="' + getWedPickData.productsTargetUrl + '" class="product-url"></a>'
+
+    itemHtml += '</div>';
+
+    $(".wedPick-item-event").addClass('basic-wedPick__item');
+    $(".wedPick-item-event").prepend(itemHtml);
+}
+
+
+/*카운트다운*/
+var targetDate = new Date("2022/04/20 10:00:00");  // 이벤트 종료 날짜 및 시간
+
+var days;
+var hrs;
+var min;
+var sec;
+
+$(function () {
+    timeToLaunch();
+
+    numberTransition('.wedPick-days', days, 1000, 'easeOutQuad');
+    numberTransition('.wedPick-hrs', hrs, 1000, 'easeOutQuad');
+    numberTransition('.wedPick-min', min, 1000, 'easeOutQuad');
+    numberTransition('.wedPick-sec', sec, 1000, 'easeOutQuad');
+
+    countDownTimer();
+
+    //setTimeout(countDownTimer, 1001);
+
+    $('.js-section-group').removeClass("active");
+});
+
+function timeToLaunch() {
+    var currentDate = new Date();
+
+    var diff = (currentDate - targetDate) / 1000;
+    var diff = Math.abs(Math.floor(diff));
+
+    days = Math.floor(diff / (24 * 60 * 60));
+    sec = diff - days * 24 * 60 * 60;
+
+    hrs = Math.floor(sec / (60 * 60));
+    sec = sec - hrs * 60 * 60;
+
+    min = Math.floor(sec / (60));
+    sec = sec - min * 60;
+}
+
+function countDownTimer() {
+    //setTimeout(countDownTimer, 1000);
+
+    setInterval(function () {
+
+        timeToLaunch();
+
+        $(".wedPick-day").text(zero(days));
+        $(".wedPick-hrs").text(zero(hrs));
+        $(".wedPick-min").text(zero(min));
+        $(".wedPick-sec").text(zero(sec));
+
+        var d = new Date();
+
+        var month = new String(d.getMonth() + 1);
+        month = String(month >= 10 ? month : '0' + month); // month 두자리로 저장
+        // console.log(month);
+
+        var Hours = d.getHours();
+        Hours = String(Hours >= 10 ? Hours : '0' + Hours);
+
+        var day = new String(d.getDate());
+        day = String(day >= 10 ? day : '0' + day);
+
+        var minutes = d.getMinutes();
+        minutes = String(minutes >= 10 ? minutes : '0' + minutes);
+
+        var currentDt = String(d.getFullYear()).concat(month, day, Hours, minutes);
+        currentDt = parseInt(currentDt);
+        //console.log(currentDt);
+
+        if (currentDt >= 202204191000 && currentDt < 202204201000) {   // 이벤트 시작시간, 이벤트 종료시간
+            $('.js-section-group').addClass("active");
+            $('.js-wedPick-popup__wrap').addClass("active");
+        } else {
+            $('.js-section-group').removeClass("active");
+            $('.js-wedPick-popup__wrap').removeClass("active");
+        }
+    }, 1000);
+}
+
+function numberTransition(id, endPoint, transitionDuration, transitionEase) {
+    $({numberCount: $(id).text()}).animate({numberCount: endPoint}, {
+        duration: transitionDuration,
+        easing: transitionEase,
+        step: function () {
+            $(id).text(Math.floor(this.numberCount));
+        },
+        complete: function () {
+            $(id).text(this.numberCount);
+        }
+    });
+};
+
+function zero(pVal) {
+    if (pVal < 10) {
+        return '0' + pVal;
+    } else {
+        return pVal;
+    }
+}

@@ -1,0 +1,74 @@
+@charset "utf-8";
+
+/* 
+	Copyright(c) 2017 Onlinepowers Development Team
+ 	http://www.onlinepowers.com
+*/
+
+  
+ 
+/* 페이지 타이틀 */
+.content_title{clear:both; padding:30px 0; text-align:center; }
+.content_title h2.title{margin:0; font-size:30px; color:#333; text-align:center; font-weight:bold;}
+.content_title p{padding-top:10px; line-height:22px; font-size:14px; color:#666;}
+
+/* h3 title */
+.sub_title{font-size:20px; color:#000;}
+.sub_title span {margin-top:8px; vertical-align:middle; font-size: 12px;color: #666;font-weight: normal;padding-left: 15px;background: url('/content/image/icon/icon_necessary.png') no-repeat 0 center;}
+.sub_title .necessary{display: block; float: right; margin-top:8px; vertical-align:middle; font-size: 12px;color: #666;font-weight: normal;padding-left: 15px;background: url('/content/image/icon/icon_necessary.png') no-repeat 0 center;}
+
+/* h4 title */
+.title_type04{color: #000; font-size: 15px;}
+
+/* 상품주문 페이지 소타이틀 */
+.order_title{font-size:18px; color:#000;}
+.order_title span{color:#23ade3; }
+
+
+
+/* contents_inner title */
+.contents_inner h2, .page_title{margin-top:30px; color:#333; font-size:24px; font-weight:normal;}
+.contents_inner h3, .page_sub_title{margin-top:30px;  color:#333; font-size:18px; }
+
+
+/* 텍스트 리스트형 */
+.box_list{padding-top:20px;}
+.box_list li{padding-left:10px; font-size:13px; line-height:24px; color: #666; background: url('/content/image/icon/icon_blet_square.gif') no-repeat 0 10px;}
+
+/* 테이블내 | 텍스트 리스트형 02 */
+.box_list_02{padding-top:10px;}
+.box_list_02 li{padding-left:10px; margin-bottom:5px; font-size:12px; color: #666; background: url('/content/image/icon/icon_blet_square.gif') no-repeat 0 8px;}
+.box_list_02 li span{font-weight: bold; color: #23ade3;}
+
+
+/* 텍스트 박스형 01  */
+.agree_box{clear:both; width:100%; margin-top:10px; padding:30px; border:1px solid #c9c9c9; height:200px; overflow:auto; }
+.agree_box .cont{margin-top:10px;} 
+
+
+/* 텍스트 박스형 02 */
+.guide_box{margin:10px 0 0 0; padding:20px; background:#fff; border:1px solid #ccc; } 
+.guide_box ul li{padding-left:12px; font-size:12px; line-height:24px; color:#666; background: url('/content/image/icon/icon_blet_square.gif') no-repeat 0 50%; } 
+.guide_box .title{color: #333; font-size: 15px; font-weight: bold;}
+
+/* 동의체크 */
+.agree_check{margin:10px 0; float:right; text-align:left;}
+.agree_chec:after{content:''; display:block; clear:both; }
+.agree_check label{color:#666;  }
+
+/* 안내문구 */
+.guide_txt{margin-top:8px; font-size:12px; color:#23ade3; padding-left:20px; background:url('/content/image/icon/icon_mark_01.gif') no-repeat 0 center;}
+.coment{font-size:12px; color:#999; }
+span.coment{padding-left:8px;} 
+
+/* 테이블 안내문구 */
+.table_top{margin-top:15px; color:#666;}
+
+/* 장바구니 안내문구 */
+.order_guide{float:right; padding-top:5px;  color:#333; } 
+
+/* guide_notice */
+.guide_notice{color:#666; }
+
+/**/
+.coupon_not{height:100px; line-height:100px;}

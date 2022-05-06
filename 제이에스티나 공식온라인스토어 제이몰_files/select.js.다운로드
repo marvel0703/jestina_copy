@@ -1,0 +1,86 @@
+$(function(){
+
+
+	eShop = this;
+	this.customsSelect = $(".custom-select");
+	this.productZoom = $(".product-preview");
+	this.toggle_wrap = $(".toggle-wrap");
+	
+	/* customs select */
+	this.selectSkin = function(s){
+		$.each(s, function(i,v){
+			this.origin = $(v).addClass("customized-hide");
+			this.wrap = this.origin.wrap("<div class='customized' />").parent(".customized");
+			this.selected = this.selectedIndex;
+			this.w_style = this.origin.attr("style");
+			this.select_list = this.wrap.prepend("<div class='customized-selectlist'></div").find(".customized-selectlist");
+			this.select_bar = this.wrap.prepend("<div class='customized-selectbar'><a href='#toggle'></a></div>").find(".customized-selectbar");
+			this.sense = 100;
+			this.disable = $(v).hasClass("disabled");
+			this.customClass = $.grep($(v).attr("class").split(" "), function(n,i){
+				return n != "custom-select" && n != "customized-hide" && n != "disabled";
+			}, false);
+			this.select_list.html(function(){
+				var tmp = "<ul>";
+				v.wrap.find("option").each(function(n,k){					
+					tmp+="<li><a href='#'>"+k.text+"</a></li>";
+				});
+				tmp+="</ul>";
+				return tmp;
+			}).find("a").on("click", function(e){
+				e.preventDefault();
+				v.select_bar.find("a").text($(this).text());
+				v.selected = $(this).parent("li").index();
+				v.origin.find("option").eq(v.selected).prop('selected', true);
+				v.select_list.hide();
+			});
+			this.select_bar.find("a").text(v.origin[0][v.selected].text).on("click", function(e){
+				e.preventDefault();
+				if(v.select_list.is(":animated")){return false;}
+				if(v.wrap.hasClass("disabled")){return false;}
+				v.wrap.addClass("active");
+				v.select_list.slideToggle("fast");
+			});
+			this.origin.on("change", function(e){
+				v.selected = this.selectedIndex;
+				v.select_bar.find("a").text(v.origin[0][v.selected].text);
+			});
+			this.wrap.hover(function(){
+				v.wrap.css('borderColor', '#555555');
+			}, function(){
+				v.wrap.css('borderColor', '#b3b3b3');
+				v.select_list.slideUp("fast", function(){
+					v.wrap.removeClass("active");
+				});
+			});
+
+			this.wrap.on("mousewheel", function(e){
+				e.preventDefault();
+				v.select_list.scrollTop(v.select_list.scrollTop()+(-e.deltaY*v.sense));
+			});
+
+			if(this.w_style){
+				/*tmp = this.w_style.substring(this.w_style.toLowerCase().match(/width/g).index, this.w_style.length); //width문자열
+				tmp = tmp.substring(0, tmp.indexOf("px")); //첫 px까지
+				tmp = tmp.replace(/[^0-9]/g, ''); //숫자만 추출
+				this.wrap.css({"width":tmp});*/
+				tmp = this.w_style;
+				this.wrap.attr("style", tmp)
+			}else{
+				/*this.wrap.css({"width":v.origin.width()+25});*/
+			};
+
+			if(this.disable){
+				this.wrap.addClass("disabled");
+			};
+
+			if(this.customClass.length > 0){
+				t = this.wrap;
+				$.each(this.customClass, function(i,v){
+					$(t).addClass(v);
+				});
+			};
+		});
+	}(eShop.customsSelect);
+    
+});

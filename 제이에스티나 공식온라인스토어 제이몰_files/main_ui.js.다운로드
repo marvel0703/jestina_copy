@@ -1,0 +1,177 @@
+$(function () {
+    //메인 슬라이드
+    var swiperVisualTop = new Swiper('.visual-top .swiper-container', {
+        slidesPerView: 1,
+        speed: 700,
+        loop: true,
+        autoplay: 2000,
+        disableOnInteraction: true,
+        slidesPerGroup: 1,
+        slideActiveClass: 'swiper-slide-active',
+        pagination: '.swiper-pagination',
+        paginationClickable :true,
+        prevButton: '.visual-top .swiper-button-prev',
+        nextButton: '.visual-top .swiper-button-next',
+
+        onSlideChangeStart: function (swiperVisualTop) { //슬라이드 변경할 때,            
+            $('.swiper-slide-next .slide__content, .swiper-slide-duplicate-next .slide__content').fadeIn();
+            $('.swiper-slide-prev .slide__content, .swiper-slide-duplicate-prev .slide__content').fadeOut();
+        },
+        onSlidePrevStart: function (swiperVisualTop) { //이전버튼 눌렀을 때,
+            $('.swiper-slide-active .slide__content, .swiper-slide-duplicate-active .slide__content, .swiper-slide-next .slide__content, .swiper-slide-duplicate-next .slide__content').fadeIn();
+            var onNext = $('.swiper-slide-next, .swiper-slide-duplicate-next').next();
+            var onNext2 = onNext.find('.slide__content');
+            onNext2.fadeOut();
+        }
+    });
+
+    $('.visual-top .swiper-container').on('mouseenter', function (e) {
+        swiperVisualTop.stopAutoplay();
+    });
+    $('.visual-top .swiper-container').on('mouseleave', function (e) {
+        swiperVisualTop.startAutoplay();
+    });
+
+    // 기획전
+    var swiper = new Swiper('.exhibitions-section .swiper-container', {
+        slidesPerView: 3,
+        slidesPerGroup: 1,
+        pagination: '.swiper-pagination',
+        paginationType: 'progress',
+        prevButton: '.exhibitions-section .swiper-button-prev',
+        nextButton: '.exhibitions-section .swiper-button-next',
+    });
+
+    // 카테고리 슬라이드 (new)    
+    var swiperNewCartegory = function () {
+        var swiper = new Swiper('.new-cartegory-section .cartegory-list__wrap .cartegory-list__item.active .swiper-container', {
+            slidesPerView: 4,
+            disableOnInteraction: true,
+            slidesPerGroup: 1,
+            prevButton: '.new-cartegory-section .cartegory-list__item.active .swiper-button-prev',
+            nextButton: '.new-cartegory-section .cartegory-list__item.active .swiper-button-next',
+        });
+    };
+
+    $('.new-cartegory-section .cartegory-nav ul li a').on('click', function (e) {
+        e.preventDefault();
+        $(this).parents().siblings().removeClass('active');
+        $(this).parents().addClass('active');
+
+        var that = $(this).parents().attr('id');
+
+        if (that == 'nav-item-all') {
+            $('.new-cartegory-section .cartegory-all').addClass('active');
+            $('.new-cartegory-section .cartegory-all').siblings().removeClass('active');
+            swiperNewCartegory();
+
+        } else if (that == 'nav-item-jewelry') {
+            $('.new-cartegory-section .cartegory-jewelry').addClass('active');
+            $('.new-cartegory-section .cartegory-jewelry').siblings().removeClass('active');
+            swiperNewCartegory();
+
+        } else if (that == 'nav-item-bag') {
+            $('.new-cartegory-section .cartegory-bag').addClass('active');
+            $('.new-cartegory-section .cartegory-bag').siblings().removeClass('active');
+            swiperNewCartegory();
+        } else if (that == 'nav-item-watch') {
+            $('.new-cartegory-section .cartegory-watch').addClass('active');
+            $('.new-cartegory-section .cartegory-watch').siblings().removeClass('active');
+            swiperNewCartegory();
+        } else if (that == 'nav-item-beauty') {
+            $('.new-cartegory-section .cartegory-beauty').addClass('active');
+            $('.new-cartegory-section .cartegory-beauty').siblings().removeClass('active');
+            swiperNewCartegory();
+        } else if (that == 'nav-item-lifestyle') {
+            $('.new-cartegory-section .cartegory-lifestyle').addClass('active');
+            $('.new-cartegory-section .cartegory-lifestyle').siblings().removeClass('active');
+            swiperNewCartegory();
+        }
+    });
+
+    // 카테고리 슬라이드 (best)
+    var swiperBestCartegory = function () {
+        var swiper = new Swiper('.best-cartegory-section .cartegory-list__wrap .cartegory-list__item.active .swiper-container', {
+            slidesPerView: 4,
+            disableOnInteraction: true,
+            slidesPerGroup: 1,
+            prevButton: '.best-cartegory-section .cartegory-list__item.active .swiper-button-prev',
+            nextButton: '.best-cartegory-section .cartegory-list__item.active .swiper-button-next',
+        });
+    };
+
+    $('.best-cartegory-section .cartegory-nav ul li a').on('click', function (e) {
+        e.preventDefault();
+        $(this).parents().siblings().removeClass('active');
+        $(this).parents().addClass('active');
+
+        var that = $(this).parents().attr('id');
+
+        if (that == 'nav-item-all__01') {
+            $('.best-cartegory-section .cartegory-all').addClass('active');
+            $('.best-cartegory-section .cartegory-all').siblings().removeClass('active');
+            swiperBestCartegory();
+        } else if (that == 'nav-item-jewelry__02') {
+            $('.best-cartegory-section .cartegory-jewelry').addClass('active');
+            $('.best-cartegory-section .cartegory-jewelry').siblings().removeClass('active');
+            swiperBestCartegory();
+        } else if (that == 'nav-item-bag__03') {
+            $('.best-cartegory-section .cartegory-bag').addClass('active');
+            $('.best-cartegory-section .cartegory-bag').siblings().removeClass('active');
+            swiperBestCartegory();
+        } else if (that == 'nav-item-watch__04') {
+            $('.best-cartegory-section .cartegory-watch').addClass('active');
+            $('.best-cartegory-section .cartegory-watch').siblings().removeClass('active');
+            swiperBestCartegory();
+        } else if (that == 'nav-item-beauty__05') {
+            $('.best-cartegory-section .cartegory-beauty').addClass('active');
+            $('.best-cartegory-section .cartegory-beauty').siblings().removeClass('active');
+            swiperBestCartegory();
+        } else if (that == 'nav-item-lifestyle__06') {
+            $('.best-cartegory-section .cartegory-lifestyle').addClass('active');
+            $('.best-cartegory-section .cartegory-lifestyle').siblings().removeClass('active');
+            swiperBestCartegory();
+        }
+    });
+
+    // 지금 주목해야 할 아이템
+    var attentionCartegory = function () {
+        var swiper = new Swiper('.attention-item__wrap .swiper-container', {
+            slidesPerView: 4,
+            disableOnInteraction: true,
+            slidesPerGroup: 1,
+            prevButton: '.attention-item__wrap .swiper-button-prev',
+            nextButton: '.attention-item__wrap .swiper-button-next',
+        });
+    };
+
+    // 연관상품
+    var associatedCartegory = function () {
+        var swiper = new Swiper('.associated-item__wrap .swiper-container', {
+            slidesPerView: 5,
+            disableOnInteraction: true,
+            slidesPerGroup: 1,
+            prevButton: '.associated-item__wrap .swiper-button-prev',
+            nextButton: '.associated-item__wrap .swiper-button-next',
+        });
+    };
+
+    // 상품 hover 이미지 (기획전 슬라이드 & NEW & BEST & 지금 주목해야 할 아이템)
+    $('body').on('mouseenter', '.goods-slide ul li', function () {
+        TweenMax.fromTo($('.goods-list__item-img', this), 1, { scale: 1.05, opacity: 0 }, { scale: 1, opacity: 1, rotationZ: 0.01, ease: Quint.easeOut });
+        TweenMax.to($('.keeping', this), 0.5, { bottom: 0, ease: Quint.easeOut });
+    }).on('mouseleave', '.goods-slide ul li', function () {
+        TweenMax.to($('.goods-list__item-img', this), 1, { scale: 1.05, rotationZ: 0.01, opacity: 0, ease: Quint.easeOut });
+        TweenMax.to($('.keeping', this), 0.5, { bottom: -45, ease: Quint.easeOut });
+    });
+
+    $(document).ready(function () {
+        swiperNewCartegory();
+        swiperBestCartegory();
+        attentionCartegory();
+        associatedCartegory();
+    });
+});
+
+
+

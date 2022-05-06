@@ -1,0 +1,29 @@
+$(document).ready(function(){
+	
+//	Shop.getCartInfo();
+	Shop.getWishlistCount();
+	Shop.getCouponInfo();
+	
+	// Breadcrumb 셀렉트 박스 이벤트.
+	breadcrumbSelectboxChangeEventHandler();
+	
+	// quickMenu   Main.js 로 이관 처리 
+	//quickMenu();
+});
+
+
+
+function breadcrumbSelectboxChangeEventHandler() {
+	if ($('.breadcrumbs select').size() > 0) {
+		$('.breadcrumbs select').on('change', function() {
+			var index = $('.breadcrumbs select').index($(this));
+			
+			if (index == 0) {
+				Shop.showAllCategoriesLayer();
+			} else {
+				location.href = '/categories/index/' + $(this).val();
+			}
+			
+		});
+	}
+}

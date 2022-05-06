@@ -1,0 +1,335 @@
+var Magazine = {
+    'mobilePrefix': '/sp'
+};
+
+var _FACEBOOK = 'facebook';
+var _INSTAGRAM = 'instagram';
+var _YOUTUBE = 'youtube';
+// sns 데이터 저장
+var _FACEBOOK_DATA_LIST = [];
+var _INSTAGRAM_DATA_LIST = [];
+var _YOUTUBE_DATA_LIST = [];
+// sns 데이터를 가져오는 개수
+var initCountFacebookData = "";
+var initCountInstagramData = "";
+var initCountYoutubeData = "";
+
+Magazine.showSnsInfoList = function(snsType, brand) {
+    var params = {
+        'snsType' : snsType,
+        'brand'   : brand
+    };
+
+    Magazine.initSnsDataCount(snsType, brand);
+
+    $.post("/magazine/show-sns-info-list", params, function(response) {
+        Common.responseHandler(response, function() {
+            var data = response.data;
+
+            for (var i=0; i<data.length; i++) {
+                var info = data[i];
+
+                switch (info.snsType) {
+                    case '1':
+                        Magazine.facebookApi(info.snsToken, info.subUrl, info.brand, faceMaxId[info.brand]);
+                        break;
+                    case '2':
+                        Magazine.instagramApi(info.snsToken, instaMaxId[info.brand], info.brand);
+                        break;
+                    case '3':
+                        Magazine.youtubeApi(info.snsToken, info.brand, youtubeMaxId[info.brand]);
+                        break;
+                }
+            }
+
+            $('.wm-tiles').append(Magazine.makeSnsHtml());
+            Magazine.clearSnsObjectList();
+        });
+    });
+
+
+};
+
+Magazine.initSnsDataCount = function(snsType, brand) {
+    if (Shop.isMobilePage) {
+        // snsType = 전체
+        if (snsType == '') {
+            if (brand == "ALL") {
+                // brand 전체 / snsType 전체일 경우 sns 별로 가져오는 데이터 개수
+                initCountFacebookData = 1;
+                initCountInstagramData = 1;
+                initCountYoutubeData = 1;
+            } else {
+                // snsType이 전체일 경우 sns 별로 가져오는 데이터 개수
+                initCountFacebookData = 5;
+                initCountInstagramData = 5;
+                initCountYoutubeData = 5;
+            }
+        } else if (snsType == '1') {
+            initCountFacebookData = 5;
+        } else if (snsType == '2') {
+            initCountInstagramData = 20;
+        } else if (snsType == '3') {
+            initCountYoutubeData = 5;
+        }
+    } else {
+        // snsType = 전체
+        if (snsType == '') {
+            if (brand == "ALL") {
+                // brand 전체 / snsType 전체일 경우 sns 별로 가져오는 데이터 개수
+                initCountFacebookData = 1;
+                initCountInstagramData = 1;
+                initCountYoutubeData = 1;
+            } else {
+                // snsType이 전체일 경우 sns 별로 가져오는 데이터 개수
+                initCountFacebookData = 5;
+                initCountInstagramData = 5;
+                initCountYoutubeData = 5;
+            }
+        } else if (snsType == '1') {
+            initCountFacebookData = 5;
+        } else if (snsType == '2') {
+            initCountInstagramData = 20;
+        } else if (snsType == '3') {
+            initCountYoutubeData = 5;
+        }
+    }
+};
+
+Magazine.facebookApi = function(token, subUrl, brand, faceMaxId) {
+    var url = "https://graph.facebook.com/"
+        + subUrl
+        + "/posts?fields=id,from,message,picture,full_picture,link,name,type,status_type,object_id,created_time,updated_time,shares,is_hidden,is_expired&access_token="
+        + token
+        + "&limit=" + initCountFacebookData
+        + "&next=" + faceMaxId;
+
+    $.ajax({
+        url: url,
+        async : false,
+        type: 'get',
+        success: function (response) {
+            Magazine.bindFacebookInfo(response, brand);
+        }
+    });
+}
+
+Magazine.bindFacebookInfo = function(response, brand) {
+    /*if(typeof response.paging != 'undefined') {*/
+    if(response.data.length != 0) {
+        var jsonData = response.data;
+
+        faceMaxId[brand] = response.paging.next;
+
+        var snsImage = "";
+        var snsLink = "";
+        var snsContent = "";
+
+        for (var i = 0; i < jsonData.length; i++) {
+            var data = jsonData[i];
+
+            snsImage = data.full_picture;
+            snsLink = data.link;
+            snsContent = data.message;
+
+            Magazine.setSnsDataList(brand, _FACEBOOK, snsImage, snsLink, snsContent);
+        }
+
+    } else {
+        Magazine.displayData('none');
+    }
+}
+
+
+
+
+
+Magazine.instagramApi = function(token, maxId, brand) {
+    var url = 'https://api.instagram.com/v1/users/self/media/recent/';
+
+    $.ajax({
+        url: url,
+        data: {
+            'access_token' : token,
+            'max_id' : maxId,
+            'count' : initCountInstagramData
+        },
+        async : false,
+        type: 'get',
+        success: function (response) {
+            Magazine.bindInstagramInfo(response, brand);
+        }
+    });
+}
+
+Magazine.bindInstagramInfo = function(response, brand) {
+    if(response.data.length != 0) {
+        var jsonData = response.data;
+
+        var snsImage = "";
+        var snsLink = "";
+        var snsContent = "";
+
+        for (var i = 0; i < jsonData.length; i++) {
+            var data = jsonData[i];
+
+            if (i == jsonData.length - 1) {
+                instaMaxId[brand] = data.id;
+            }
+
+            snsImage = data.images.low_resolution.url;
+            snsLink = data.link;
+            snsContent = data.caption.text;
+
+            Magazine.setSnsDataList(brand, _INSTAGRAM, snsImage, snsLink, snsContent);
+        }
+
+    } else {
+        Magazine.displayData('none');
+    }
+}
+
+
+Magazine.youtubeApi = function(token, brand, youtubeMaxId) {
+
+    var a_apikey = token;
+
+    $.ajax({
+        url: 'https://www.googleapis.com/youtube/v3/channels',
+        data : {part : 'contentDetails', forUsername : 'jestinacom', key : a_apikey},
+        async : false,
+        type: 'get',
+        success: function (data) {
+            /*console.log('data', data);*/
+            var pid = "";
+
+            $.each(data.items, function(i, item) {
+                pid = item.contentDetails.relatedPlaylists.uploads;
+                getVids(pid);
+            });
+        }
+    });
+
+    function getVids(pid) {
+        $.get("https://www.googleapis.com/youtube/v3/playlistItems",
+            {part : 'snippet', maxResults : initCountYoutubeData, playlistId: pid, key : a_apikey, pageToken : youtubeMaxId},
+            function(data) {
+                /*console.log('videos', data);*/
+                Magazine.bindYoutubeInfo(data, brand);
+            }
+        );
+    }
+}
+
+Magazine.bindYoutubeInfo = function(response, brand) {
+
+    if(response.items.length != 0) {
+        youtubeMaxId[brand] = response.nextPageToken;
+
+        var jsonData = response.items;
+
+        var snsImage = "";
+        var snsLink = "";
+        var snsContent = "";
+
+        for (var i = 0; i < jsonData.length; i++) {
+            var data = jsonData[i];
+
+            snsImage = data.snippet.thumbnails.high.url;
+            snsLink = "//www.youtube.com/embed/" + data.snippet.resourceId.videoId;
+            snsContent = data.snippet.description;
+
+            Magazine.setSnsDataList(brand, _YOUTUBE, snsImage, snsLink, snsContent);
+        }
+
+    } else {
+        Magazine.displayData('none');
+    }
+
+}
+
+Magazine.setSnsDataList = function(brand, snsType, snsImage, snsLink, snsContent) {
+    var data = {
+        'brand' : brand,
+        'snsType' : snsType,
+        'snsImage' : snsImage,
+        'snsLink' : snsLink,
+        'snsContent' : snsContent
+    }
+
+    if (_FACEBOOK == snsType) {
+        _FACEBOOK_DATA_LIST.push(data);
+    } else if (_INSTAGRAM == snsType) {
+        _INSTAGRAM_DATA_LIST.push(data);
+    } else if (_YOUTUBE == snsType) {
+        _YOUTUBE_DATA_LIST.push(data);
+    }
+}
+
+Magazine.clearSnsObjectList = function() {
+    _FACEBOOK_DATA_LIST = [];
+    _INSTAGRAM_DATA_LIST = [];
+    _YOUTUBE_DATA_LIST = [];
+}
+
+Magazine.makeSnsHtml = function() {
+    if (!Shop.isMobilePage) {
+        wmLayout();
+    }
+
+    var facebookLength = _FACEBOOK_DATA_LIST.length;
+    var instagramLength = _INSTAGRAM_DATA_LIST.length;
+    var youtubeLength = _YOUTUBE_DATA_LIST.length;
+
+    var snsLengthInfos = new Array(facebookLength, instagramLength, youtubeLength);
+
+    var maxLength = snsLengthInfos[0];
+    for (var i = 1; i < snsLengthInfos.length; i++) {
+        if (maxLength < snsLengthInfos[i]) {
+            maxLength = snsLengthInfos[i];
+        }
+    }
+    var html = "";
+    var data = "";
+    for (var i = 0; i < maxLength; i++) {
+        if (i < facebookLength) {
+            data = _FACEBOOK_DATA_LIST[i];
+            bindingHtml(data);
+        }
+        if (i < instagramLength) {
+            data = _INSTAGRAM_DATA_LIST[i];
+            bindingHtml(data);
+        }
+
+        if (i < youtubeLength) {
+            data = _YOUTUBE_DATA_LIST[i];
+            bindingHtml(data);
+        }
+
+    }
+
+    function bindingHtml(data) {
+        html += "<li>";
+        html +=     "<a href='" + data.snsLink + "' target='_blank'>";
+        html +=         "<div class='magazine-img'>";
+        html +=             "<div class='sns-label'><i class='ico-" + data.snsType + "'></i><span>" + data.brand + "</span></div>";
+        html +=             "<img src='" + data.snsImage + "'>";
+        html +=         "</div>";
+        html +=         "<div class='box-txt box-txt2'>";
+        html +=             "<p>" + data.snsContent + "</p>";
+        html +=         "</div>";
+        html +=     "</a>";
+        html += "</li>";
+    }
+
+    return html;
+}
+
+Magazine.displayData = function(displayType) {
+    if (displayType == 'none') {
+        $('.more-wrap').css('display', 'none');
+    }
+    if (displayType == 'block') {
+        $('.more-wrap').css('display', 'block');
+    }
+}

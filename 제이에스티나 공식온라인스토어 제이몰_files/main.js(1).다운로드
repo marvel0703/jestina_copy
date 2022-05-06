@@ -1,0 +1,125 @@
+$(function() {
+	
+	var isAutoSlideVisual = true;	// 비주얼 자동 슬라이드 여부
+	
+	//----------------------------------------------------------------------------------------------------------------------------
+	// Visual Banner Slider
+	var visualSwiper = new Swiper('.viusal-swiper-container', {
+		autoplay: 5000,
+		speed: 1000,
+		loop: true,
+		pagination: '.viusal-wrap .pagination',
+		paginationClickable: true,
+		prevButton: '.inner-visual-btn .btn-prev',
+		nextButton: '.inner-visual-btn .btn-next',
+		autoplayDisableOnInteraction: false
+	});
+	
+	$('.viusal-wrap .visual-pagination a.btn-pause').click(function() {
+		isAutoSlideVisual == true ? visualSwiper.stopAutoplay() : visualSwiper.startAutoplay();
+		isAutoSlideVisual = !isAutoSlideVisual;
+		$(this).toggleClass('playing');
+		
+		return false;
+	});
+	
+	//----------------------------------------------------------------------------------------------------------------------------
+	// Center Double Slide Banner
+	$('.banner-wrap .slider-pro').sliderPro({
+		height: 300,
+		autoplay: false,
+		visibleSize: '100%',
+		slideDistance: 14,
+		arrows: true,
+		fadeArrows: false,
+		buttons: false
+	});
+	
+	//----------------------------------------------------------------------------------------------------------------------------
+	// Pick me deal Slide Banner
+	var pickmeSwiper = new Swiper('.pickme-swiper-container', {
+		autoplay: 4000,
+		speed: 600,
+		loop: true,
+		pagination: '.pickme-banner .pagination',
+		paginationClickable: true,
+		autoplayDisableOnInteraction: false
+	});
+	
+	//----------------------------------------------------------------------------------------------------------------------------
+	// Brand/New/Trend 상품
+	$('body').on('mouseenter','.goods-list ul li .goods-img-wrap',function() {
+		// onlinepowers-20190415-start
+		//TweenMax.to( $('.goods-img', this), 1, {scale: 1.05, rotationZ:0.01, ease:Quint.easeOut} );
+		// onlinepowers-20190415-end
+		TweenMax.fromTo( $('.goods-img-over', this), 1, {scale: 1.05, opacity: 0}, {scale: 1, opacity: 1, rotationZ:0.01, ease:Quint.easeOut} );
+		TweenMax.to( $('.keeping', this.parentNode), 0.5, {bottom: 0, ease:Quint.easeOut} );
+	}).on('mouseleave','.goods-list ul li .goods-img-wrap',function() {
+		// onlinepowers-20190415-start
+		//TweenMax.to( $('.goods-img', this), 1, {scale: 1, rotationZ:0.01, ease:Quint.easeOut} );
+		// onlinepowers-20190415-end
+		TweenMax.to( $('.goods-img-over', this), 1, {scale: 1.05, rotationZ:0.01, opacity: 0, ease:Quint.easeOut} );
+		TweenMax.to( $('.keeping', this.parentNode), 0.5, {bottom: -37, ease:Quint.easeOut} );
+	});
+
+	$('body').on('mouseenter','.goods-list ul li .keeping',function() {
+		// onlinepowers-20190415-start
+		//TweenMax.to( $('.goods-img-wrap .goods-img', this.parentNode), 1, {scale: 1.05, rotationZ:0.01, ease:Quint.easeOut} );
+		// onlinepowers-20190415-end
+		TweenMax.to( $('.goods-img-wrap .goods-img-over', this.parentNode), 1, {scale: 1, rotationZ:0.01, opacity: 1, ease:Quint.easeOut} );
+		TweenMax.to( $(this), 0.5, {bottom: 0, ease:Quint.easeOut} );
+	}).on('mouseleave','.goods-list ul li .keeping',function() {
+		// onlinepowers-20190415-start
+		//TweenMax.to( $('.goods-img-wrap .goods-img', this.parentNode), 1, {scale: 1, rotationZ:0.01, ease:Quint.easeOut} );
+		// onlinepowers-20190415-end
+		TweenMax.to( $('.goods-img-wrap .goods-img-over', this.parentNode), 1, {scale: 1.05, rotationZ:0.01, opacity: 0, ease:Quint.easeOut} );
+		TweenMax.to( $(this), 0.5, {bottom: -37, ease:Quint.easeOut} );
+	});
+	
+	//----------------------------------------------------------------------------------------------------------------------------
+	// Brand Tab Slide Contents
+	var tabSwiper = new Swiper('.main-section2 .brand-swiper-container', {
+		slidesPerView: 'auto',
+		prevButton: '.main-section2 .brand-btn .inner-brand-btn .btn-prev',
+		nextButton: '.main-section2 .brand-btn .inner-brand-btn .btn-next'
+	});
+
+	$('body').on('mouseenter','.main-section2 .brand-swiper-container, .main-section2 .brand-btn', function() {
+		$('.main-section2 .brand-btn').stop().fadeIn(200);
+	}).on('mouseleave','.main-section2 .brand-swiper-container, .main-section2 .brand-btn', function() {
+		$('.main-section2 .brand-btn').stop().fadeOut(200);
+	});
+
+	$('body').on('mouseenter', '.main-section2 .thumbnail-wrap .thumbnail, .main-section2 .thumbnail-wrap .thumbnail-over', function() {
+		showBrandGoodsInfo($(this).parent(), true);
+	}).on('mouseleave', '.main-section2 .thumbnail-wrap .thumbnail, .main-section2 .thumbnail-wrap .thumbnail-over', function() {
+		showBrandGoodsInfo($(this).parent(), false);
+	});
+	
+	function showBrandGoodsInfo(goods, show)
+	{
+		show ? $('.thumbnail-over', goods).stop().fadeIn(300) : $('.thumbnail-over', goods).stop().fadeOut(150);
+	}
+	
+	$('body').on('click','.main-section2 .brand-swiper-container .swiper-slide > a', function() {
+		$('.main-section2 .brand-swiper-container .swiper-slide > a').removeClass('on');
+		$(this).addClass('on');
+		$('.main-section2 .brand-tab-content .brand-content').hide();
+		$('.main-section2 .brand-tab-content .brand-content').eq($(this.parentNode).index()).show();
+		
+		return false;
+	});
+	
+	//----------------------------------------------------------------------------------------------------------------------------
+	// MAGAZINE
+	$('body').on('mouseenter','.magazine ul li a',function() {
+		TweenMax.to( $('.magazine-img img', this), 1, {scale: 1.05, rotationZ:0.01, ease:Quint.easeOut} );
+		TweenMax.to( $('.magazine-img .magazine-label', this), 0.5, {backgroundColor:'rgba(0,0,0,1)'} );
+		TweenMax.to( $('.magazine-img .magazine-tit', this), 0.5, {height: 32, ease:Quint.easeOut} );
+	}).on('mouseleave','.magazine ul li a',function() {
+		TweenMax.to( $('.magazine-img img', this), 1, {scale: 1, rotationZ:0, ease:Quint.easeOut} );
+		TweenMax.to( $('.magazine-img .magazine-label', this), 0.5, {backgroundColor:'rgba(0,0,0,0.5)'} );
+		TweenMax.to( $('.magazine-img .magazine-tit', this), 0.5, {height: 18, ease:Quint.easeOut} );
+	});
+	
+});

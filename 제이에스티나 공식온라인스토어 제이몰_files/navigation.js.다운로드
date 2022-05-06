@@ -1,0 +1,213 @@
+$(function() {
+	//
+	var stoCatMenu;
+	var stoBrandMenuOut;
+	
+	// Depth 1
+	$('.gnb-wrap .caterogy-wrap .btn-category').mouseenter(function() {
+		clearTimeout(stoCatMenu);
+		$(this).addClass('on');
+		$('.category-menu-wrap > .depth1-wrap').show();
+		//
+		brandMenuHide();
+	}).mouseleave(function() {
+		stoCatMenu = setTimeout(onCatMenuOut, 500);
+	}).click(function() {
+		return false;
+	}).focusin(function() {
+		$(this).trigger('mouseenter');
+	}).focusout(function() {
+		$(this).trigger('mouseleave');
+	});
+	
+	function onCatMenuOut()
+	{
+		$('.depth1-wrap .depth1 > li, .depth2-wrap .depth2 > li, .depth3-wrap .depth3 > li').removeClass('on');
+		$('.category-menu-wrap > .depth1-wrap, .category-menu-wrap > .depth1-wrap .depth1 > li .depth2-wrap').hide();
+		$('.gnb-wrap .caterogy-wrap .btn-category').removeClass('on');
+	}
+	
+	$('.category-menu-wrap > .depth1-wrap .depth1 > li > a').mouseenter(function() {
+		//clearTimeout(stoCatMenu);
+		//
+		$('.category-menu-wrap > .depth1-wrap .depth1 > li').removeClass('on');
+		$(this.parentNode).addClass('on');
+		//
+		$('.depth2-wrap').hide();
+		$('.depth2-wrap', this.parentNode).show();
+		//
+		$('.depth3-wrap').hide();
+	}).mouseleave(function() {
+		stoCatMenu = setTimeout(onCatMenuOut, 500);
+	}).focusin(function() {
+		$(this).trigger('mouseenter');
+	}).focusout(function() {
+		$(this).trigger('mouseleave');
+	});
+	
+	$('.category-menu-wrap > .depth1-wrap').mouseover(function() {
+		clearTimeout(stoCatMenu);
+	}).mouseleave(function() {
+		stoCatMenu = setTimeout(onCatMenuOut, 500);
+	}).focusin(function() {
+		$(this).trigger('mouseover');
+	}).focusout(function() {
+		$(this).trigger('mouseleave');
+	});
+	
+	// Depth 2
+	$('.category-menu-wrap > .depth1-wrap .depth1 > li .depth2 > li > a').mouseenter(function() {
+		$('.category-menu-wrap > .depth1-wrap .depth1 > li .depth2 > li').removeClass('on');
+		$(this.parentNode).addClass('on');
+		//
+		$('.depth3-wrap').hide();
+		$('.depth3-wrap', this.parentNode).show();
+	}).mouseleave(function() {
+		stoCatMenu = setTimeout(onCatMenuOut, 500);
+	}).focusin(function() {
+		$(this).trigger('mouseenter');
+	}).focusout(function() {
+		$(this).trigger('mouseleave');
+	});
+	
+	// Depth 3
+	$('.category-menu-wrap > .depth1-wrap .depth1 > li .depth2 > li .depth3 > li > a').mouseenter(function() {
+		$('.category-menu-wrap > .depth1-wrap .depth1 > li .depth2 > li .depth3 > li').removeClass('on');
+		$(this.parentNode).addClass('on');
+	}).focusin(function() {
+		$(this).trigger('mouseenter');
+	});
+	
+	
+	//
+	$('.category-menu-wrap a').mouseenter(function() {
+		$('ul li', this.parentNode).removeClass('on');
+	}).focusin(function() {
+		$(this).trigger('mouseenter');
+	});
+	
+	
+	//-----------------------------------------------------------------------------------------------------------------
+	// Brand Menu
+	$('.gnb-wrap .brand-wrap a.btn-brand').mouseenter(function() {
+		clearTimeout(stoBrandMenuOut);
+	}).click(function() {
+		$(this).addClass('on');
+		$('.brand-wrap .brand-menu-wrap, .dim').toggle();
+		$('.dim').height( $(document).height() - $('#header').height() );
+		return false;
+	}).mouseleave(function() {
+		stoBrandMenuOut = setTimeout(brandMenuHide, 500);
+	}).focusin(function() {
+		$(this).trigger('mouseenter');
+	}).focusout(function() {
+		$(this).trigger('mouseleave');
+	});
+	
+	$('.brand-wrap .brand-menu-wrap').mouseenter(function() {
+		clearTimeout(stoBrandMenuOut);
+	}).mouseleave(function() {
+		stoBrandMenuOut = setTimeout(brandMenuHide, 500);
+	}).focusin(function() {
+		$(this).trigger('mouseenter');
+	}).focusout(function() {
+		$(this).trigger('mouseleave');
+	});
+	
+	//-----------------------------------------------------------------------------------------------------------------
+	// 내비게이션 패스 메뉴
+	var stoLocationMenuOut;
+	$('.location-wrap .inner-location > ul > li > a').click(function() {
+		if($(this).attr('href') === '/') {
+			location.href = '/';
+			return false;
+		}
+		$('.location-box .drop-menu').each(function(){
+			$(this).hide();
+		});
+		$(this).parent().children('div').toggle();
+		return false;
+	});
+	$('.location-box .drop-menu').mouseenter(function() {
+		clearTimeout(stoLocationMenuOut);
+	}).mouseleave(function() {
+		stoLocationMenuOut = setTimeout(function() {
+			$('.location-box .drop-menu').hide();
+		}, 500);
+	});
+	
+	function brandMenuHide()
+	{
+		$('.brand-wrap .brand-menu-wrap, .dim').hide();
+		$('.gnb-wrap .brand-wrap a.btn-brand').removeClass('on');
+	}
+	
+	//-----------------------------------------------------------------------------------------------------------------
+	// Quick Menu
+	if ($('#quick-menu').length != 0) {
+		
+
+	    //상품목록 가져오기
+		//fn_SetSkyDisplay();
+		
+
+		$('.floatbar').on('click','a.button-lately',function(){
+            $('.floatbar .lately-item').toggle();
+
+            return false;
+		});
+
+        $('.floatbar').on('click', 'a.lately-close', function() {
+            $('.floatbar .lately-item').hide();
+
+            return false;
+		});
+
+		/*$('.floatbar > ul > li > a.button-lately').click(function() {
+			$('.floatbar .lately-item').toggle();
+			
+			return false;
+		});*/
+		/*$('.floatbar .lately-item .lately-tit .lately-close').click(function() {
+			$('.floatbar .lately-item').hide();
+			
+			return false;
+		});*/
+
+		var recentViewGoodsSwiper = startTodayItemSwiper();
+
+		/*$('.floatbar .lately-item .lately-swiper-container .swiper-slide a').mouseenter(function() {
+			$(this.parentNode.parentNode).addClass('on');
+		}).mouseleave(function() {
+			$(this.parentNode.parentNode).removeClass('on');
+		});*/
+		$('.floatbar').on('mouseenter', '.swiper-slide a', function() {
+            $(this.parentNode.parentNode).addClass('on');
+		}).on('mouseleave', '.swiper-slide a', function() {
+            $(this.parentNode.parentNode).removeClass('on');
+        });
+
+
+
+
+		//
+		$('.floatbar .btn-top').click(function() {
+			TweenMax.to( $('html, body'), 1, {scrollTop: 0, ease:Quint.easeOut} );
+		    
+		    return false;
+		});
+	}
+});
+
+function startTodayItemSwiper() {
+    return new Swiper('.lately-swiper-container', {
+        slidesPerView: 5,
+        slidesPerColumn: 2,
+        spaceBetween: 20,
+        width: 580,
+        pagination: '.lately-item .layer-pagination .pagination',
+        paginationClickable: true,
+        prevButton: '.lately-item .layer-pagination a.btn-prev',
+        nextButton: '.lately-item .layer-pagination a.btn-next'
+    });
+}

@@ -1,0 +1,339 @@
+$(document).ready(function(){    
+	allMenu();
+	mainAd();
+	mdChoice();
+	mainNew();
+	//bestItem();
+	uiTabsMenu();
+	tabMenuSlider();
+	
+	getCartInfo();
+	quickMenu();
+})
+
+
+/* all menu */
+function allMenu(){
+	$(".btn_menu").on("click", function(e){   
+		e.preventDefault(); 
+		
+		function resetClass(){
+			$(".btn_menu").removeClass("on"); 
+			$(".gnbs").removeClass("show"); 
+		}
+		if($(this).attr('class') == 'btn_menu'){
+			resetClass();
+			$(this).addClass("on");
+			$(this).next(".gnbs").addClass("show");   
+		}else{
+			$(this).removeClass("on"); 
+			$(this).next(".gnbs").removeClass("show");  
+		} 
+	}); 
+} 
+
+
+/* 메인 비쥬얼 배너 */
+function mainAd(){
+	var slider = $('.bxslider').bxSlider({
+		pagerCustom: '#bx-pager2',
+		auto: true,
+		autoControls: true
+	});
+
+	$('a.pager-prev').click(function () {
+		var current = slider.getCurrentSlide();
+		slider.goToPrevSlide(current) - 1;
+	});
+	$('a.pager-next').click(function () {
+		var current = slider.getCurrentSlide();
+		slider.goToNextSlide(current) + 1;
+	});
+}
+
+/* md choice  */
+function mdChoice(){
+	$('.md_choice_inner').bxSlider({  
+		slideWidth: 223,
+		maxSlides: 4,
+		slideMargin: 50,
+		auto: true,
+		autoControls: true
+	});
+} 
+
+/* best item   
+function bestItem(){
+	$('.best_item_inner').bxSlider({  
+		slideWidth: 150,
+		maxSlides: 6,
+		slideMargin: 28,
+		auto: true,
+		autoControls: true
+	});
+}*/
+
+/* main new  */
+function mainNew(){
+	$('.main_new_inner').bxSlider({ 
+		pager: true,
+		slideWidth: 223,
+		maxSlides: 4,
+		slideMargin: 50,
+		auto: true,
+		autoControls: true
+	});
+} 
+
+ 
+/* best item */
+function uiTabsMenu () {
+	var $menu = $('.best_tab'),
+		$contWrap = $('.ui_tabs_contents_wrap'),
+		_content ='.ui_tab_content',
+		curr = 'current';
+
+	if(!$menu.length ) { return }
+	$(_content).css('display', 'none');
+	$contWrap.each(function(){
+		$(this).find('div' + _content +':first').css('display', 'block');
+	});
+	$menu.on('click','a', function(){
+		if(!$(this).hasClass(curr)){
+			$(this).addClass(curr).closest('li').siblings('li').find('.' + curr).removeClass(curr);
+			$($(this).attr('href')).css('display', 'block').siblings('div'+_content).css('display', 'none');
+		}
+		this.blur();
+		return false;
+	});
+};
+ 
+function tabMenuSlider() {
+	var $tabmenu = $('.best_tab'),
+	$contWrap = $('.ui_tabs_contents_wrap'),
+	$sliderClass = '.bx_slider',
+	config = {
+		maxSlides:6,
+		slideWidth:159,
+		slideMargin: 25,
+		infiniteLoop:false,
+		hideControlOnEnd:false,
+		pager:false
+		//nextText: '다음 페이지',
+		//prevText: '이전 페이지'
+	};
+	
+	var sliders = new Array();
+	$($sliderClass).each(function(i, slider) {
+		var len = $(slider).find('> li').length;
+		if(len < 3) {
+			sliders[i] = $(slider).addClass('nonslider');
+		} else {
+			sliders[i] = $(slider).bxSlider(config);
+		}
+	});
+	
+	if(!$tabmenu.length ) { return }
+		$contWrap.each(function(){
+			if($(this).find('div.ui_tab_content').is(':first')) {
+				slider.reloadSlider(config);
+			}
+		});
+	$tabmenu.on('click', ' a', function(e){
+		var _target = $(this).attr('href');
+	
+		if($(_target).css('display') === 'block') {
+			$.each(sliders, function(i, slider){
+				if(!slider.hasClass('nonslider')) {
+					slider.reloadSlider(config);
+				}
+			});
+		}
+		e.preventDefault();
+	});
+}
+
+
+function quickMenuPagination() {
+	// QUICK MENU
+    var $quickMenu = $('#quick-menu');
+    var $todayItems = $('.item_area ul');
+    var todayItemCount = $todayItems.find('> li').size();
+    var todayItemsIndex = 0;
+    var itemHeight = 65;
+    var totalPages = Math.ceil(todayItemCount / 3);
+    var currentPage = 1;
+    var itemsPerPage = 3;
+    
+    
+    $quickMenu.find('.page p span').text(totalPages);
+    
+    $('.page a.prev').on('click', function(e) {
+    	e.preventDefault();
+    	
+    	if (totalPages > 1) {
+    		if (currentPage == 1) {
+    			currentPage = totalPages;
+    		} else {
+    			currentPage--;
+    		}
+    		
+    		var topSize = (currentPage - 1) * itemHeight * itemsPerPage;
+    		$todayItems.css('margin-top', '-' + topSize + 'px');
+    		$quickMenu.find('.page p strong').text(currentPage);
+    	} 
+    	
+    	
+    	
+    });
+    
+    $('.page a.next').on('click', function(e) {
+    	e.preventDefault();
+
+    	if (totalPages > 1) {
+    		if (currentPage == totalPages) {
+    			currentPage = 1;
+    		} else {
+    			currentPage++;
+    		}
+    		
+    		var topSize = (currentPage - 1) * itemHeight * itemsPerPage;
+    		$todayItems.css('margin-top', '-' + topSize + 'px');
+    		$quickMenu.find('.page p strong').text(currentPage);
+    	} 
+
+    });
+}
+
+getCartInfo = function() {
+	Common.loading.display = false;
+    $.post('/common/cart', {}, function(response) {
+        Common.responseHandler(response, function(response) {
+            var obj = response.data;
+            var quantity = obj.cartList.length;
+            
+            if ($('#quick-menu').size() > 0) {
+                $('#aside_cart_quantity').text(Common.numberFormat(quantity));
+                $('#header_cart_quantity').text(Common.numberFormat(quantity));
+                $('#header_cart_quantity').addClass('header__btn--cart-badge');
+            } else {
+                if (quantity > 0) {
+                    $('#header_cart_quantity').text(Common.numberFormat(quantity)).show();
+                    $('#footer_cart_quantity').text(Common.numberFormat(quantity)).show();
+                    $('#header_cart_quantity').addClass('header__btn--cart-badge');
+                }
+            }
+        });
+    }, 'json');
+
+};
+
+function quickMenu() {
+	
+	if ($('#quick-menu').size() > 0)
+	{
+		
+
+		var quickMenuTop = ($('#layBodyWrap').position() === undefined) ? 200 : $('#layBodyWrap').position().top;
+		quickMenuTop = ($('.magazine-content').position() === undefined) ? quickMenuTop : $('.magazine-content').position().top ;
+		quickMenuTop = ($('.promotion-section').position() === undefined) ? quickMenuTop : $('.promotion-section').position().top ;
+		quickMenuTop = ($('.product-search-wrap').position() === undefined) ? quickMenuTop : $('.product-search-wrap').position().top ;
+		quickMenuTop = ($('.slider-pro').position() === undefined) ? quickMenuTop : quickMenuTop +206 ;
+		quickMenuTop = ($('.lnb-wrap').position() !== undefined && $('.lnb-wrap').position().top > 10) ? $('.lnb-wrap').position().top : quickMenuTop ;
+		quickMenuTop = ($('#mainpageHome').position() === undefined) ? quickMenuTop : 1020;
+		// quickMenuTop = ($('div.top-line-banner-t').position() !== undefined && $('div.top-line-banner-t').css("display") != 'none') ? quickMenuTop + 100 : quickMenuTop;
+		
+		$('#floating').css({position: 'absolute', top: 0});
+		$('#quick-menu').css({position: 'absolute', top: quickMenuTop});
+		//var quickMenuTop = $('floating').position().top;
+		$(window).scroll(function() {
+			if ($(window).scrollTop() <= quickMenuTop - 9) {
+				$('#quick-menu').css({position: 'absolute', top: quickMenuTop});
+			}
+			else {
+				$('#quick-menu').css({position: 'fixed', top: 9});
+			}
+		});
+		// 스크롤
+//		$(window).scroll(function() {
+//			var scrollTop = $(document).scrollTop();
+//			var isGnbFixed = true;
+//			
+//			// 상품 상세페이지는 GNB fixed가 아님.
+//			if (location.href.indexOf('/products/view/') > -1) {
+//				isGnbFixed = false;
+//			}
+//			
+//			// 7beauty는 GNB fix 없음. 상단 배너 여부에 따라 사이지가 달라짐.
+//			isGnbFixed = false;
+//			
+//			var bannerTopSize = 130;
+//			if ($('.main_top_banner').size() > 0 && $('.main_top_banner').css('display') != 'none') {
+//				bannerTopSize = bannerTopSize + $('.main_top_banner').height();
+//			}
+//			
+//			
+//			if (Number(scrollTop) > bannerTopSize) {
+//				$('#quick-menu').css({'position': 'fixed', 'top': '0px'});
+//			
+//			} else {
+//				$('#quick-menu').css({'position': 'absolute', 'top': '0px'});
+//
+//			}
+//		});
+		
+
+		
+		// ie6에서만 스크롤시
+		$(window).scroll( function () {
+			if(Common.browser.msie && Common.browser.version == '6') fn_ScrollSky();
+	    });
+	    
+	    // 장바구니 클릭
+	    $('.cart').click( function(){
+	    	$('#quick-wish-layer').hide();
+	    	if($('#quick-cart-layer').css('display') != 'none')
+	    	{
+	    		$('#quick-cart-layer').hide();
+	    	}
+	    	else
+	    	{
+	    		$('#quick-cart-layer').bgIframe().show();
+	    	}
+	    });
+	    
+	    // 위시리스트 클릭
+	    $('.wish').click( function(){
+	    	$('#quick-cart-layer').hide();
+	    	
+	    	if (op_is_login == '')
+	    	{
+	    		if(confirm('로그인이 필요한 서비스 입니다.\n\n로그인 페이지로 이동하시겠습니까?'))
+	    		{
+	    			document.location.href = '/member/shopLogin';
+	    			return;
+	    		}
+	    		else
+	    		{
+	    			return;
+	    		}
+	    	}
+	    	
+	    	if($('#quick-wish-layer').css('display') != 'none')
+	    	{
+	    		$('#quick-wish-layer').hide();
+	    	}
+	    	else
+	    	{
+	    		$('#quick-wish-layer').bgIframe().show();
+	    	}
+	    });
+	    
+	    // 포인트 조회 이미지 스왑
+	    $('.view_point').mouseover( function(){
+	    	$(this).attr('src', $(this).attr('src').replace('_off', '_on'));
+	    }).mouseout( function(){
+	    	$(this).attr('src', $(this).attr('src').replace('_on', '_off'));
+	    });
+	}
+}

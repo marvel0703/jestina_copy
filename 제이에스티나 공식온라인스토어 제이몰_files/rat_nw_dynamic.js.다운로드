@@ -1,0 +1,1492 @@
+var _debug_mode = false;
+var _rat_init_flag = 0;
+var _trk_kp_flag=0;
+var _trk_kp_queue=[];
+var _myshpRatKey;
+var _myshpLayerId;
+var _myshpHSet = {};
+function _call_kp_queue(){
+    try
+    {
+        while(_trk_kp_queue.length > 0){
+            var func = _trk_kp_queue.shift();
+            eval(func);
+        }
+    }
+    catch(e)
+    {
+        
+    }
+}
+
+// 리포트 관련
+var RatNWTrk = function() {
+    this.version_code = "w_1.0.0";
+    this.order_cookie_key = "nw_trk_order_";
+    this.random_number = new Date().getTime().toString();
+
+    // 생성자
+    this.reportURL = {
+        buy:"//mcro.myshp.us/data/collect/tag_buy,//trk.adnext.co/rat/tag/custom?tag=RAT_BUY",
+        view:"//trk.adnext.co/rat/tag/custom?tag=RAT_VIEW",
+        cart:"//trk.adnext.co/rat/tag/custom?tag=RAT_CART",
+        search:"//trk.adnext.co/rat/tag/custom?tag=RAT_SEARCH",
+        other:"//trk.adnext.co/rat/tag/custom?tag=RAT_"
+    };
+}
+
+RatNWTrk.prototype.jsInit = function(rat_id, options)
+{	
+	var ratKeys = rat_id.split(',');
+    this._ratKey = ratKeys[0].replace(/[^A-Za-z0-9]/g,'');
+    
+
+	var gmocoxudid = new _mocoxudid();
+	this._awudid = gmocoxudid.id();
+    
+    if(typeof options !== 'undefined'){
+        if(typeof options.logo !== 'undefined' && typeof options.aos !== 'undefined' && typeof options.ios !== 'undefined'){
+            this._logo = options.logo;
+            this._aos = options.aos;
+            this._ios = options.ios;
+        }else{
+            this._logo = '';
+            this._aos = '';
+            this._ios = '';
+        }
+
+        if(typeof options.ga !== 'undefined'){
+            this._rat_ga = options.ga
+        }
+
+        if(typeof options.gw !== 'undefined'){
+            this._rat_gw = options.gw
+        }
+
+        if(typeof options.fb !== 'undefined'){
+            this._rat_fb = options.fb
+        }
+
+        if(typeof options.kakao !== 'undefined'){
+            this._rat_kakao = options.kakao
+        }
+
+        if(options.test !== 'undefined'){
+            this._isTest = options.test
+        }else{
+            this._isTest = false;
+        }
+        
+        if(options.demo !== 'undefined'){
+            this._isDemo = options.demo
+        }else{
+            this._isDemo = false;
+        }
+    }else{
+        this._logo = '';
+        this._aos = '';
+        this._ios = '';
+        this._isTest = false;
+        this._isDemo = false;
+    }
+    
+    if(this._isDemo == true){
+	    this._awudid = '000000000000000000000000';
+    }
+    
+    if(rat_id == '5c931e430cf2d8f4d8b7257c'){
+	    var lastC = this._awudid.slice(-1);
+	    if(lastC <= '8'){
+		    this._ratKey = '5c931e530cf2d8f4d8b7257d';
+	    }
+    }
+    if(rat_id == '5d0b25c9d3c51604808b00a9'){
+	    var lastC = this._awudid.slice(-1);
+	    if(lastC > '8'){
+		    this._ratKey = '5d0b266dd3c51604808b00b0';
+	    }
+    }
+    
+    if(ratKeys.length > 1){
+	    var lastC = this._awudid.slice(-1);
+	    if(lastC > '8'){
+		    this._ratKey = ratKeys[1];
+	    }
+    }
+    
+    _myshpRatKey = this._ratKey;
+
+    if(_debug_mode){
+        console.log("rat_id : " + rat_id);
+        console.log("awudid : " + this._awudid);
+    }
+
+    if (typeof gNWTrk !== 'undefined') {
+        // check gNWTrk
+        if(gNWTrk != null && gNWTrk != undefined && Array.isArray(gNWTrk))
+        {
+            for(var i=gNWTrk.length-1;i>=0;i--)
+            {
+                var obj = gNWTrk[i];
+                this.sendEvent(obj);
+                gNWTrk.pop();
+            }
+        }       
+    }
+    
+    if (typeof gMyshpRC !== 'undefined') {
+        // check gMyshpRC
+        if(gMyshpRC != null && gMyshpRC != undefined && Array.isArray(gMyshpRC))
+        {
+            for(var i=gMyshpRC.length-1;i>=0;i--)
+            {
+                var obj = gMyshpRC[i];
+                new this.MyshpRecommend(obj.config, obj.callback);
+                gMyshpRC.pop();
+            }
+        }       
+    }
+    
+    if (typeof gMyshpRCV !== 'undefined') {
+        // check gMyshpRCV
+        if(gMyshpRCV != null && gMyshpRCV != undefined && Array.isArray(gMyshpRCV))
+        {
+            for(var i=gMyshpRCV.length-1;i>=0;i--)
+            {
+                var obj = gMyshpRCV[i];
+                new this.MyshpRecommendView(obj.config);
+                gMyshpRCV.pop();
+            }
+        }       
+    }
+
+    if(typeof this._rat_ga !== 'undefined'){
+        try
+        {
+            var script = document.createElement('script');
+            var s = document.getElementsByTagName("script")[0];
+            var url = "https://www.googletagmanager.com/gtag/js?id=" + this._rat_ga;
+            script.async = true;
+            script.src = url;
+            s.parentNode.insertBefore(script, s);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', this._rat_ga);
+
+            if(typeof this._rat_gw !== 'undefined'){
+                gtag('config', this._rat_gw);
+            }
+        }catch(e){
+        }
+    }
+    
+    if(typeof this._rat_kakao !== 'undefined'){
+        try
+        {
+            var script = document.createElement('script');
+            var s = document.getElementsByTagName("script")[0];
+            script.src = "//t1.daumcdn.net/adfit/static/kp.js";
+            script.onreadystatechange = function () {
+                if (this.readyState == 'complete' || this.readyState == 'loaded') {
+                    try
+                    {
+                        if(_trk_kp_flag++==0)_call_kp_queue();                    
+                    }
+                    catch(e){}
+                }
+            };
+            script.onload = function () { try{
+                
+                if(_trk_kp_flag++==0)
+                    _call_kp_queue();       
+                
+            }catch(e){}};
+            s.parentNode.insertBefore(script, s);
+        }catch(e){
+        }
+    }
+
+    // 유입 네트워크 체크
+    var inflow_network = mRatTrkQs["cvtrk_network"];
+    if(typeof inflow_network != "undefined"){
+        try {
+            // imp 전송
+            var f = "id=" + this._ratKey;
+            f += "&page_id=" + inflow_network;
+            f += "&panel_id=" + inflow_network;
+            f += "&platform="
+            f += (this.isMobile())?"mobile_web":"pc";
+
+            var fimp = f;
+            fimp += "&imp_type=3";
+            var aimp = window.location.protocol + '//mcro.myshp.us/data/collect/imp';
+            aimp += "?" + fimp;
+            this.loadIframe(aimp, null);
+
+            // click 전송
+            var fclk = f;
+            fclk += "&clk_type=1";
+            var aclk = window.location.protocol + '//mcro.myshp.us/data/collect/click';
+            aclk += "?" + fclk;
+            aclk += "&awudid=" + this._awudid;
+            this.loadIframe(aclk, null);
+            
+        } catch (d) {
+            this.log("error!! " + d)
+        }
+
+
+        if(this._logo.length > 0 && this._aos.length > 0 && this._ios.length > 0)
+            this.readyPopup();
+    }
+    
+    
+    window.addEventListener('message', function(e) {
+
+		try {
+			var data = e.data
+			if(typeof data.myshp_el_id !== 'undefined'){
+				//console.log(data);
+				if(data.height == 0){
+					var d = document.getElementById(_myshpLayerId);
+					d.style.height = '0';
+				}else{
+					var o = document.getElementById(data.myshp_el_id+'iframe');
+					o.style.height = data.height + 'px';
+				}
+			}
+			
+		}catch(e) {}
+	});
+}
+
+RatNWTrk.prototype._isBrowserEnabled = function ()
+{
+    var ratNWObj = this;
+    try{
+        // 디바이스가 모바일이 아니면 return
+        if(ratNWObj.isMobile() == false){
+            return false;
+        }
+        
+        var ua = navigator.userAgent;
+        // 디바이스가 태블릿이면 return
+        if (ua.toLowerCase().indexOf('ipad') > -1 || 
+                (ua.toLowerCase().indexOf('android') > -1 && ua.toLowerCase().indexOf('mobile') == -1)){ 
+            return false; 
+        }
+        
+        var DeviceName = "Unknown Device";
+        var OsVersion = "0.0";
+        var iOsVersion = [0,0,0];
+        var agent = ua.toLowerCase(); //userAgent 값 얻기
+        if (agent.indexOf('android')>-1) { 
+            DeviceName = "android";
+            OsVersion = agent.match(/android\s+([\d\.]+)/)[1];
+        } else if (agent.indexOf("iphone")>-1||agent.indexOf("ipod")>-1) { 
+            DeviceName = "ios";
+            var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+            iOsVersion = [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+        }
+        
+        if((DeviceName == "android" && OsVersion >= "5.1") || (DeviceName == "ios" && iOsVersion[0] >= 9)){
+            return true;
+        }
+        
+    }catch(e){
+        
+    }
+    
+    return false;
+}
+
+RatNWTrk.prototype._getReferrerDomain = function ()
+{
+    if (document.referrer) {
+        var url = document.referrer;
+        return url.match(/:\/\/(.[^/]+)/)[1];
+    }
+}
+
+RatNWTrk.prototype.readyPopup = function(key)
+{
+    var ratNWObj = this;
+
+    var enabled = ratNWObj._isBrowserEnabled();
+    if(!enabled){
+        return;
+    }
+
+    var referrerDomain = this._getReferrerDomain();
+    var currentPageUrl = window.location.href.split("//")[1].split("/")[0];
+
+    if(typeof referrerDomain == "undefined" || referrerDomain == ""){
+        return;
+    }
+
+    //var croDomain = croPanelObj._domain.split("//")[1];
+    if(referrerDomain && currentPageUrl.indexOf(referrerDomain) < 0){
+        this._isReferrerMatched = false;
+    }else{
+        this._isReferrerMatched = true;
+    }
+
+    if(this._isReferrerMatched == true) return;
+
+    window.addEventListener("hashchange", function(event){
+
+        var oUrl = event.oldURL;
+        var nUrl = event.newURL;
+        if(oUrl.indexOf('#mscreen') > 0)
+        {
+            if(nUrl.indexOf('#') < 0){
+
+				var w = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+				var h = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+
+
+	            var src='//cdn0.mocoplex.com/adnext/release/storepop.html?aos=' + encodeURIComponent(ratNWObj._aos) + '&ios=' + encodeURIComponent(ratNWObj._ios) + '&logo=' + encodeURIComponent(ratNWObj._logo);
+	            
+	            var div = "<div style='background-color:#ffffff;position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;width:"+w+"px;height:"+h+"px;z-index:9999' id='mscrpopup'></div>";
+
+				document.body.innerHTML+=div;
+				
+	            var frame = "<iframe frameborder=0 marginwidth=0 scrolling=no border=0 allowtransparency=true padding=0 margin=0 style='width:"+w+"px;height:"+h+"px;' src='"+src+"'></iframe></div>";
+	            document.getElementById('mscrpopup').innerHTML = frame;
+	            
+                
+            }
+        }
+        
+        if(oUrl.indexOf('#mscreen') < 0){
+            if(nUrl.indexOf('#mscreen') > 0){
+                var iframe = document.getElementById("ifr_screensharp_popup");
+                if(typeof iframe !== "undefined" && iframe != null){
+                    iframe.parentElement.removeChild(iframe);
+                }
+            }
+        }
+    }, false);
+
+    if(document.addEventListener){
+        document.addEventListener("readystatechange", function(){
+            if(document.readyState === "complete"){
+                if(_rat_init_flag++==0){
+                    ratNWObj._hashChange();
+                }
+            }
+        }, false);
+    }else if(document.attachEvent){
+        document.attachEvent("onreadystatechange", function(){
+            // check if the DOM is fully loaded
+            if(document.readyState === "complete"){
+                if(_rat_init_flag++==0){
+                    ratNWObj._hashChange();
+                }
+            }
+        });
+    }
+}
+
+RatNWTrk.prototype._hashChange = function()
+{
+    if(location.href.indexOf('#mscreen') < 0){
+        setTimeout(function(){
+            location.hash = 'mscreen';
+        }, 500);
+    }
+}
+
+RatNWTrk.prototype.getParameter = function(key)
+{
+    var b = "";
+    var a = "";
+    try{
+    	a = decodeURIComponent(location.search);
+    }catch(e){
+    	a = decodeURIComponent(unescape(location.search));
+    }
+	
+    var e = (a.slice(a.indexOf("?") + 1, a.length)).split("&");
+    for (var d = 0; d < e.length; d++) {
+        var f = e[d].split("=")[0];
+        if (f.toUpperCase() == key.toUpperCase()) {
+            b = e[d].split("=")[1];
+            break;
+        }
+    }
+    return b;
+}
+
+RatNWTrk.prototype.getReferParameter = function(key)
+{
+	var refer_url = document.referrer;
+	var idx = (refer_url.indexOf("?")>-1)?refer_url.indexOf("?"):refer_url.length;
+	var refer_search = refer_url.substring(idx);
+	
+    var b = "";
+    var a = "";
+    try{
+    	a = decodeURIComponent(refer_search);
+    }catch(e){
+    	a = decodeURIComponent(unescape(refer_search));
+    }
+	
+    var e = (a.slice(a.indexOf("?") + 1, a.length)).split("&");
+    for (var d = 0; d < e.length; d++) {
+        var f = e[d].split("=")[0];
+        if (f.toUpperCase() == key.toUpperCase()) {
+            b = e[d].split("=")[1];
+            break;
+        }
+    }
+    return b;
+}
+
+RatNWTrk.prototype.stringify = function(e)
+{
+    var d = typeof(e);
+    if (d != "object" || e === null) {
+        if (d == "string") {
+            e = '"' + e + '"'
+        }
+        return String(e);
+    } else {
+        var f, b, c = [],
+            a = (e && e.constructor == Array);
+        for (f in e) {
+            b = e[f];
+            d = typeof(b);
+            if (d == "string") {
+                b = '"' + b.replace(/\"/gi, "\\\"") + '"';
+            } else {
+                if (d == "object" && b !== null) {
+                    b = JSON.stringify(b);
+                }
+            }
+            c.push((a ? "" : '"' + f + '":') + String(b));
+        }
+        return (a ? "[" : "{") + String(c) + (a ? "]" : "}");
+    }
+}
+
+RatNWTrk.prototype.addRecentProduct = function(prod)
+{
+    if(prod.indexOf(",")>0)
+        return;
+
+    var arr = [];   
+    var idxkey = "rat_nw_trk_prod";
+    var idxkey_idx = "rat_nw_trk_prod_idx";
+        
+    var v = this.getCookie(idxkey);
+    
+    var mxlen = 10;
+    
+    try
+    {
+        var mx = v.split(",");
+        if(mx.length <= 0)
+        {
+            arr = [];
+        }
+        else
+        {
+            for(var i=0;i<mx.length;i++)
+            {
+                if(mxlen-- <= 0)
+                    break;
+
+                if(mx[i] != "" && mx[i] != undefined && mx[i] != null && mx[i] != prod)
+                {
+                    arr.push(mx[i]);
+                }
+            }
+        }
+    }
+    catch(e)
+    {
+        arr = [];       
+    }
+    
+    arr.unshift(prod);
+    
+    // make array
+    {
+        var res = "";
+        for(var i=0;i<arr.length;i++)
+        {
+            if(i!=0)
+                res += ",";
+            res += arr[i];
+        }       
+
+        this.setCookie(idxkey,res,14);
+        this.setCookie(idxkey_idx,"0",14);
+    }
+},
+
+RatNWTrk.prototype.setCookie = function(t, e, i) 
+{
+    var n = window.location.hostname,
+        r = new Date;
+    void 0 !== i ? r.setDate(r.getDate() + i) : r.setDate(r.getDate());
+    var a = " domain=" + n, 
+        o = t + "=" + escape(e) + "; path=/;";
+    void 0 !== i && (o += " expires=" + r.toGMTString() + ";"), o += a, document.cookie = o
+}
+
+RatNWTrk.prototype.getCookie = function(t)
+{
+    t += "=";
+    var e = document.cookie, 
+        i = e.indexOf(t),
+        n = "";
+    if (-1 != i) {
+        i += t.length;
+        var r = e.indexOf(";", i); - 1 == r && (r = e.length), n = e.substring(i, r)
+    }
+    return unescape(n)
+}
+
+RatNWTrk.prototype.isMobile = function()
+{
+    var filter = "win16|win32|win64|mac|macintel";
+    if(navigator.platform){
+        if( filter.indexOf(navigator.platform.toLowerCase())<0 ){
+            return true;
+        }
+    }
+        
+    return false;
+}
+
+RatNWTrk.prototype.loadIframe = function(a) 
+{
+    try {
+        var d = document.createElement("iframe");
+        d.src = a + "&reqtime=" + (new Date()).getTime();
+        d.style.position = "absolute";
+        d.style.display = "none";
+        document.body.appendChild(d)
+    } catch (c) {}
+}
+
+RatNWTrk.prototype.sendEvent = function(data)
+{
+    if(this._isTest == true){
+        return;
+    }
+
+    var isSkipSendBuy = false;
+    
+    // tag 체크해서 url 가져오기
+    var tag = data.evt.toLowerCase();
+    if(_debug_mode){
+        console.log(tag);
+    }
+    var url = this.reportURL[data.evt];
+    if(_debug_mode){
+        console.log("evt url : " + url);
+    }
+    if (typeof url == 'undefined'){
+	    if(typeof data.evt == 'undefined'){
+		    return;
+        }
+        
+        url = this.reportURL["other"];
+        url += data.evt.toUpperCase();
+    }
+
+    data.url = window.location.href;
+    
+    if(typeof data.price == 'number'){
+		data.price = data.price + "";
+	}
+	if(typeof data.price !== 'undefined'){
+		data.price = data.price.replace(/[^0-9.]/g,'');
+	}
+	if(typeof data.regular_price == 'number'){
+		data.regular_price = data.regular_price + "";
+	}
+	if(typeof data.regular_price !== 'undefined'){
+		data.regular_price = data.regular_price.replace(/[^0-9.]/g,'');
+	}
+	if(typeof data.qty == 'number'){
+		data.qty = data.qty + "";
+	}
+	if(typeof data.soldout == 'number'){
+		data.soldout = data.soldout + "";
+	}
+	if(typeof data.p_no == 'number'){
+		data.p_no = data.p_no + "";
+	}
+
+    if(tag == "view"){
+	    if(typeof data.cate1 == 'undefined'){
+			data.cate1 = "";
+		}
+		if(typeof data.cate2 == 'undefined'){
+			data.cate2 = "";
+		}
+		if(typeof data.cate3 == 'undefined'){
+			data.cate3 = "";
+		}
+        this.addRecentProduct(data.p_no);
+    } else if(tag == "search"){
+	    if(typeof data.keyword == 'undefined'){
+		    return;
+	    }
+    } else if(tag == "buy"){
+        // buy 수집인 경우 새로고침해서 중복 수집되는 경우를 막기위해 주문번호와 난수를 cookie에 저장한다.
+        var _orderId = '';
+        if(typeof data.order_id !== 'undefined'){
+			_orderId = data.order_id;
+		}
+
+		if(_orderId.length <= 0){
+			if(data.url.indexOf('order_id') > 0){
+				var params = data.url.split('?')[1];
+				var param = params.split('&');
+				for(var i = 0; i < param.length; i++)
+	    		{
+					var code = param[i].split('=');
+	        		var key = code[0];
+	        		var value = code[1];
+		        	
+	        		if(key == 'order_id'){
+	        			_orderId = value;	
+	        		}
+	    		}
+			}
+		}
+		
+		if(_orderId.length > 0){
+			// 해당 주문번호가 키값으로 쿠키에 저장되어 있는지 확인하여 내역이 없으면 쿠키에 저장(value는 로드될 때 생성한 난수).
+			var rn = this.getCookie(this.order_cookie_key + _orderId);
+			if(rn.length <= 0){
+				this.setCookie(this.order_cookie_key + _orderId, this.random_number, 1);
+			}
+			// 저정된 난수가 있으면 현재 생성되어 있는 난수와 비교하여 동일하지 않을때 return
+			else{
+				//console.log('load : ' + this.random_number + ', saved : ' + rn);
+				if(rn !== this.random_number){
+					isSkipSendBuy = true;
+				}
+			}
+			
+		}
+    }
+    if(this.getParameter("koost") != "") {
+        data.koost = this.getParameter("koost");
+    }
+    else {
+        data.koost = "N";
+    }
+    
+    if(this.getParameter("koostgrp") != "") {
+        data.koostgrp = this.getParameter("koostgrp");
+    }
+    
+    if(this.getParameter("koost_search") != "") {
+        data.koost_search = this.getParameter("koost_search");
+    }
+	
+    if(this.getParameter("refer_koost") != "") {
+        data.refer_koost = this.getParameter("refer_koost");
+    }
+    
+    if(this.getParameter("koost_search") != "") {
+	    if(this.getParameter("refer_koost") == "") {
+		    if(this.getReferParameter("koost") != "") {
+			    data.refer_koost = this.getReferParameter("koost");
+		    }
+	    }
+    }	
+
+    try{
+        data.referrer = document.referrer;
+    }catch(e){
+    }
+    if(typeof data.platform == 'undefined'){
+        data.platform = (this.isMobile())?"mobile_web":"pc";
+    }
+
+    if(_debug_mode){
+        console.log(data);
+    }
+    
+    var extparams = {};
+    var command = 'ratEvent';
+    var tagName;
+    if(tag == 'view'){
+	    tagName = 'RAT_VIEW';
+    }else if(tag == 'buy'){
+	    tagName = 'RAT_BUY';
+    }else if(tag == 'cart'){
+	    tagName = 'RAT_CART';
+    }else if(tag == 'search'){
+	    tagName = 'RAT_SEARCH';
+    }
+    if(tagName == 'RAT_BUY'){
+        extparams.item = encodeURI(data.p_no);
+    }
+    if (window.AdnxtWebInterface) {
+        data.platform = 'mobile_app_aos';
+        window.AdnxtWebInterface.logEvent(command, tagName, this.stringify(data), this.stringify(extparams));
+        return;
+    } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.adnxtjs) {
+        data.platform = 'mobile_app_ios';
+        var message = {};
+        message.command = command;
+        message.name = tagName;
+        message.parameters = data;
+        message.extparams = extparams;
+        window.webkit.messageHandlers.adnxtjs.postMessage(message);
+        return;
+    }
+
+    try{
+        if(tag == "buy"){
+            var trkParam = "";
+            trkParam += "value=" + mNWTrkBase64.encode(this.stringify(data));
+            trkParam += "&ver=" + this.version_code;
+            trkParam += "&id=" + this._ratKey;
+            trkParam += "&ty=W";
+            trkParam += "&awudid=" +this._awudid;
+            if( data.p_no != "" && data.p_no != null && data.p_no != undefined )
+            {
+                trkParam += "&item=" + encodeURI(data.p_no);
+            }
+
+            var urls = url.split(',');
+            var buyurl1 = urls[0];
+            var buyurl2 = urls[1];
+            if(buyurl1.indexOf("?") > 0){
+                buyurl1 += "&";
+            } else {
+                buyurl1 +=  "?";
+            }
+            if(buyurl2.indexOf("?") > 0){
+                buyurl2 += "&";
+            } else {
+                buyurl2 +=  "?";
+            }
+
+            if(isSkipSendBuy == false){
+                this.loadIframe(buyurl1 + trkParam);
+                this.loadIframe(buyurl2 + trkParam);
+            }
+
+        } else {
+            var trkParam;
+            if(url.indexOf("?") > 0){
+                trkParam = "&";
+            } else {
+                trkParam = "?";
+            }
+            trkParam += "value=" + mNWTrkBase64.encode(this.stringify(data));
+            trkParam += "&ver=" + this.version_code;
+            trkParam += "&id=" + this._ratKey;
+            trkParam += "&ty=W";
+            trkParam += "&awudid=" +this._awudid;
+
+            if(_debug_mode){
+                console.log(url + trkParam);
+            }
+
+            this.loadIframe(url + trkParam);
+            
+            if(tag == "view" && this._ratKey == "5d106419d3c51604808b00b3"){
+	            var viewUrl = "//mcro.myshp.us/data/collect/view_count?";
+	            viewUrl += "value=" + mNWTrkBase64.encode(this.stringify(data));
+	            viewUrl += "&ver=" + this.version_code;
+	            viewUrl += "&id=" + this._ratKey;
+	            viewUrl += "&ty=W";
+	            viewUrl += "&awudid=" +this._awudid;
+
+	            this.loadIframe(viewUrl);
+            }
+        }
+    }catch(e){
+    }
+
+    if(tag == "view"){
+        if(typeof this._rat_ga !== 'undefined'){
+            try{
+                function gtag(){dataLayer.push(arguments);}
+                gtag('event', 'view_item', {
+                    "items" : [{
+                        'id': data.p_no,
+                        'name': data.p_name,
+                        'price': data.price
+                    }]
+                });
+            }catch(e){}
+        }
+
+        if(typeof this._rat_kakao !== 'undefined'){
+            try{
+                if(typeof kakaoPixel == 'function') {
+                    kakaoPixel(this._rat_kakao).pageView();
+                    kakaoPixel(this._rat_kakao).viewContent({id: data.p_no});
+                }else{
+                    var func1 = "kakaoPixel('" + this._rat_kakao + "').pageView()";
+                    var func2 = "kakaoPixel('" + this._rat_kakao + "').viewContent({id:'" + data.p_no + "'})";
+                    _trk_kp_queue.push(func1);
+                    _trk_kp_queue.push(func2);
+                }
+            }catch(e){}
+        }
+    }
+
+    if(tag == "cart"){
+        if(typeof this._rat_ga !== 'undefined'){
+            try{
+                function gtag(){dataLayer.push(arguments);}
+                gtag('event', 'add_to_cart', {
+                    "items" : [{
+                        'id': data.p_no,
+                        'name': data.p_name,
+                        'price': data.price,
+                        'quantity': data.qty
+                    }]
+                });
+            }catch(e){}
+        }
+    }
+
+    if(tag == "buy"){
+        if(typeof this._rat_ga !== 'undefined'){
+            try{
+                function gtag(){dataLayer.push(arguments);}
+                gtag('event', 'purchase', {
+                    "items" : [{
+                        'id': data.p_no,
+                        'name': data.p_name,
+                        'price': data.price,
+                        'quantity': data.qty
+                    }]
+                });
+            }catch(e){}
+        }
+
+        if(typeof this._rat_kakao !== 'undefined'){
+            try{
+                if(typeof kakaoPixel == 'function') {
+                    kakaoPixel('7006102351917171272').pageView();
+                    kakaoPixel('7006102351917171272').purchase({
+                        total_quantity: data.qty,
+                        total_price: data.price,
+                        currency: "KRW",
+                        products: [
+                            { name: data.p_name, quantity: data.qty, price: data.price }
+                        ]
+                    });
+                }else{
+                    var func1 = "kakaoPixel('" + this._rat_kakao + "').pageView()";
+                    var func2 = "kakaoPixel('" + this._rat_kakao + "').purchase({" +
+                        "total_quantity:'" + data.qty + "'," +
+                        "total_price:'" + data.price + "'," +
+                        "currency:'KRW'," + 
+                        "products:[{name:'" + data.p_name + "', quantity:'" + data.qty + "', price:'" + data.price + "'}]" +
+                    "})";
+                    _trk_kp_queue.push(func1);
+                    _trk_kp_queue.push(func2);
+                }
+            }catch(e){}
+        }
+    }
+
+    if(tag == "search"){
+
+        if(typeof this._rat_kakao !== 'undefined'){
+            try{
+                if(typeof kakaoPixel == 'function') {
+                    kakaoPixel(this._rat_kakao).pageView();
+                    kakaoPixel(this._rat_kakao).search({keyword: data.keyword});
+                }else{
+                    var func1 = "kakaoPixel('" + this._rat_kakao + "').pageView()";
+                    var func2 = "kakaoPixel('" + this._rat_kakao + "').search({keyword:'" + data.keyword + "'})";
+                    _trk_kp_queue.push(func1);
+                    _trk_kp_queue.push(func2);
+                }
+            }catch(e){}
+        }
+    }
+}
+
+// 암호화 관련
+var mNWTrkBase64 = {
+    _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+    encode: function(c) {
+        var a = "";
+        var k, h, f, j, g, e, d;
+        var b = 0;
+        c = mNWTrkBase64._utf8_encode(c);
+        while (b < c.length) {
+            k = c.charCodeAt(b++);
+            h = c.charCodeAt(b++);
+            f = c.charCodeAt(b++);
+            j = k >> 2;
+            g = ((k & 3) << 4) | (h >> 4);
+            e = ((h & 15) << 2) | (f >> 6);
+            d = f & 63;
+            if (isNaN(h)) {
+                e = d = 64
+            } else {
+                if (isNaN(f)) {
+                    d = 64
+                }
+            }
+            a = a + this._keyStr.charAt(j) + this._keyStr.charAt(g) + this._keyStr.charAt(e) + this._keyStr.charAt(d)
+        }
+        a = a.replace(/\+/g, "-").replace(/\//g, "_").replace(/\=+$/, "");
+        return a
+    },
+    decode: function(c) {
+        var a = "";
+        var k, h, f;
+        var j, g, e, d;
+        var b = 0;
+        c = c.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+        while (b < c.length) {
+            j = this._keyStr.indexOf(c.charAt(b++));
+            g = this._keyStr.indexOf(c.charAt(b++));
+            e = this._keyStr.indexOf(c.charAt(b++));
+            d = this._keyStr.indexOf(c.charAt(b++));
+            k = (j << 2) | (g >> 4);
+            h = ((g & 15) << 4) | (e >> 2);
+            f = ((e & 3) << 6) | d;
+            a = a + String.fromCharCode(k);
+            if (e != 64) {
+                a = a + String.fromCharCode(h)
+            }
+            if (d != 64) {
+                a = a + String.fromCharCode(f)
+            }
+        }
+        a = mNWTrkBase64._utf8_decode(a);
+        return a
+    },
+    _utf8_encode: function(b) {
+        b = b.replace(/\r\n/g, "\n");
+        var a = "";
+        for (var e = 0; e < b.length; e++) {
+            var d = b.charCodeAt(e);
+            if (d < 128) {
+                a += String.fromCharCode(d)
+            } else {
+                if ((d > 127) && (d < 2048)) {
+                    a += String.fromCharCode((d >> 6) | 192);
+                    a += String.fromCharCode((d & 63) | 128)
+                } else {
+                    a += String.fromCharCode((d >> 12) | 224);
+                    a += String.fromCharCode(((d >> 6) & 63) | 128);
+                    a += String.fromCharCode((d & 63) | 128)
+                }
+            }
+        }
+        return a
+    },
+    _utf8_decode: function(a) {
+        var b = "";
+        var d = 0;
+        var e = c1 = c2 = 0;
+        while (d < a.length) {
+            e = a.charCodeAt(d);
+            if (e < 128) {
+                b += String.fromCharCode(e);
+                d++
+            } else {
+                if ((e > 191) && (e < 224)) {
+                    c2 = a.charCodeAt(d + 1);
+                    b += String.fromCharCode(((e & 31) << 6) | (c2 & 63));
+                    d += 2
+                } else {
+                    c2 = a.charCodeAt(d + 1);
+                    c3 = a.charCodeAt(d + 2);
+                    b += String.fromCharCode(((e & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    d += 3
+                }
+            }
+        }
+        return b
+    },
+    URLEncode: function(a) {
+        return escape(this._utf8_encode(a))
+    },
+    URLDecode: function(a) {
+        return this._utf8_decode(unescape(a))
+    }
+};
+
+var mRatTrkQs = (function(a) {
+    if (a == "") return {};
+    var b = {};
+    for (var i = 0; i < a.length; ++i)
+    {
+        var p=a[i].split('=', 2);
+        if (p.length == 1)
+            b[p[0]] = "";
+        else{
+            try{
+                b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+            }catch(e){
+                b[p[0]] = p[1].replace(/\+/g, " ");
+            }
+        }
+    }
+    return b;
+})(window.location.search.substr(1).split('&'));
+
+var $myShpJsonp = (function(){
+    	var that = {};
+
+    	that.send = function(src, options) {
+    		if(typeof options != "undefined"){
+    			var callback_name = options.callbackName || 'callback',
+          		on_success = options.onSuccess || function(){},
+          		on_timeout = options.onTimeout || function(){},
+          		timeout = options.timeout || 10; // sec
+
+	        	var timeout_trigger = window.setTimeout(function(){
+	          		window[callback_name] = function(){};
+	          		on_timeout();
+	        	}, timeout * 1000);
+
+	        	window[callback_name] = function(data){
+	          		window.clearTimeout(timeout_trigger);
+	          		on_success(data);
+	        		}
+    			}
+
+	        	var script = document.createElement('script');
+	        	script.type = 'text/javascript';
+	        	script.async = true;
+	        	script.src = src;
+	
+	        	document.getElementsByTagName('head')[0].appendChild(script);
+		}
+
+    		return that;
+    })();
+
+
+RatNWTrk.prototype.MyshpRecommend = function(myshp_config, callback)
+{
+	var that = this;
+	this._cfg = myshp_config
+	//this.cfg.id = "myshp"+this.myshpID()
+	
+	var url = '//ndata.adnext.co/data/recommend/';
+	if(myshp_config.type == 'pbyt'){
+		url += 'plist?'
+		url += 'item=' + globalNWTrk.getCookie('rat_nw_trk_prod')
+		url += '&c_type=m';
+	}else if(myshp_config.type == 'pbyc'){
+		url += 'plist?'
+		url += 'item=' + globalNWTrk.getCookie('rat_nw_trk_prod');
+		url += '&c_type=m';
+		url += '&tag=view';
+	}else if(myshp_config.type == 'pbyp'){
+		url += 'products?'
+		url += 'item=' + myshp_config.key;
+		url += '&c_type=m';
+		if(typeof myshp_config.tag != 'undefined' && myshp_config.tag != null && myshp_config.tag == "buy"){
+			url += '&tag=buy';
+		}else{
+			url += '&tag=view';
+		}
+	}else if(myshp_config.type == 'pbyk'){
+		url += 'keyword?'
+		url += 'item=' + encodeURIComponent(myshp_config.key);
+		url += '&c_type=m';
+	}else if(myshp_config.type == 'kbyk'){
+		url += 'kbyk?'
+		url += 'item=' + encodeURIComponent(myshp_config.key);
+	}else if(myshp_config.type == 'kbyp'){
+		url += 'kbyp?'
+		url += 'item=' + myshp_config.key;
+	}else if(myshp_config.type == 'top'){
+		url += 'products?'
+		url += 'item=koost';
+		url += '&c_type=m';
+		url += '&tag=buy';
+	}else if(myshp_config.type == 'order'){
+		var item = '';
+		if(typeof myshp_config.key == 'string'){
+			item = myshp_config.key;
+		}else{
+			try{
+				item = myshp_config.key.toString();
+			}catch(e){}
+		}
+		url += 'order_list?'
+		url += 'item=' + item;
+	}else{
+		return;
+	}
+	
+	var tracking_code = "koost=" + myshp_config.section_id;
+	if(myshp_config.type == 'pbyk'){
+		tracking_code += "&koost_search=";
+		tracking_code += encodeURIComponent(myshp_config.key);
+		
+		if(globalNWTrk.getParameter("koost") != "") {
+		    tracking_code += "&refer_koost=";
+		    tracking_code += globalNWTrk.getParameter("koost");
+		}
+	}
+	
+	url += '&id=' + globalNWTrk._ratKey;
+	url += '&count=15';
+	var tm = Math.random().toString(36).substr(2, 9);
+	var cbname = "rc_" + myshp_config.type + tm;
+    $myShpJsonp.send(url + '&callback=' + cbname, {
+        callbackName: cbname,
+        onSuccess: function(json){
+	        try{
+		        if(myshp_config.type == 'pbyt'){
+			        var result = {};
+		        	result.data = json.data.products;
+		        	result.trk_code = tracking_code;
+		        	that.impression(myshp_config, result);
+					callback(result);
+				}else if(myshp_config.type == 'pbyc'){
+					var result = {};
+					if(json.result == 0){
+						result.data = json.data.products;
+					}else{
+						result.data = [];
+					}
+					result.trk_code = tracking_code;
+					that.impression(myshp_config, result);
+					callback(result);
+				}else if(myshp_config.type == 'pbyp'){
+					var result = {};
+					if(json.result == 0){
+						result.data = json.data.products;
+					}else{
+						result.data = [];
+					}
+		        	result.trk_code = tracking_code;
+		        	that.impression(myshp_config, result);
+					callback(result);
+				}else if(myshp_config.type == 'pbyk'){
+					var result = {};
+					if(json.result == 0){
+						result.data = json.data.products;
+					}else{
+						result.data = [];
+					}
+		        	result.trk_code = tracking_code;
+		        	that.impression(myshp_config, result);
+					callback(result);
+				}else if(myshp_config.type == 'kbyk'){
+					var result = {};
+					if(json.result == 0){
+						result.data = json.data.keywords;
+					}else{
+		        		result.data = [];
+		        	}
+		        	result.trk_code = tracking_code;
+		        	that.impression(myshp_config, result);
+					callback(result);
+				}else if(myshp_config.type == 'kbyp'){
+					var result = {};
+		        	result.data = json.data.keywords;
+		        	result.trk_code = tracking_code;
+		        	that.impression(myshp_config, result);
+					callback(result);
+				}else if(myshp_config.type == 'top'){
+					var result = {};
+					if(json.result == 0){
+						result.data = json.data.products;
+					}else{
+						result.data = [];
+					}
+		        	result.trk_code = tracking_code;
+		        	that.impression(myshp_config, result);
+					callback(result);
+				}else if(myshp_config.type == 'order'){
+					var result = {};
+					if(json.result == 0){
+						result.data = json.data.products;
+					}else{
+						result.data = [];
+					}
+		        	result.trk_code = tracking_code;
+		        	that.impression(myshp_config, result);
+					callback(result);
+				}
+			}catch(e){
+				var result = {};
+		        result.data = [];
+		        result.trk_code = "";
+				callback(result);
+			}
+        },
+        onTimeout: function(){
+            
+        },
+        timeout: 2
+    });
+}
+
+RatNWTrk.prototype.MyshpRecommend.prototype.impression = function(myshp_config, result)
+{
+	try{
+		var chid = myshp_config.section_id;
+		if(result.data.length == 0){
+			return;
+		}
+		var rtype = myshp_config.type;
+		if(rtype == 'pbyp' || rtype == 'pbyk' || rtype == 'kbyp' || rtype == 'kbyk'){
+			if(!!!myshp_config.key){
+				return;
+			}
+			
+			if(myshp_config.key == 'undefined'){
+				return;
+			}
+		}
+		
+		if(_myshpHSet.hasOwnProperty(chid)){
+			return;
+		}
+		
+		_myshpHSet[chid] = true;
+		
+		var platform = (globalNWTrk.isMobile())?"mobile_web":"pc";
+		var url = '//api2.myshp.us/api/impression?myshp=' + globalNWTrk._ratKey + '&ch=' + chid + '&platform=' + platform;
+		$myShpJsonp.send(url + '&callback=imp_' + chid, {
+			callbackName: 'imp_' + chid,
+			onSuccess: function(data){
+			},
+			onTimeout: function(){
+			},
+			timeout: 2
+	    });
+		
+	}catch(e){
+		console.log(e);
+	}
+}
+
+RatNWTrk.prototype.MyshpRecommendView = function(myshp_config)
+{
+	var myshpObj = this;
+	myshpObj._cfg = myshp_config;
+	
+	var outDiv = document.getElementById(myshp_config.layerid);
+	//outDiv.style.display = 'none';
+	
+	if(typeof myshp_config.channel_id != 'undefined' && myshp_config.channel_id != null && myshp_config.channel_id != ''){
+		var url = '//api2.myshp.us/api/section?myshp=' + _myshpRatKey + '&ch=' + myshp_config.channel_id;
+		if(globalNWTrk._isDemo == true){
+			url += '&temp=1';
+		}
+		$myShpJsonp.send(url + '&callback=ch_' + myshp_config.channel_id, {
+			callbackName: 'ch_' + myshp_config.channel_id,
+			onSuccess: function(data){
+				try{
+					if(data.result_code == '0'){
+						var sections = data.sections;
+						for(var i in sections){
+							//console.log(sections[i]);
+							myshpObj.loadView(sections[i]);
+						}
+					}
+				}catch(e){
+					
+				}
+			},
+			onTimeout: function(){
+			},
+			timeout: 2
+	    });
+	}else{
+		try{
+			myshpObj.loadView2();
+		}catch(e){}
+	}
+}
+
+RatNWTrk.prototype.MyshpRecommendView.prototype.loadView = function(section)
+{
+	var type = section.section_code;
+	var title = section.title;
+	var iw = section.iw;
+	var ih = section.ih;
+	var tcode = section.tcode;
+	var temp = section.temp;
+	var detail_url = '';
+	if(typeof section.detail_url !== 'undefined'){
+		detail_url = section.detail_url;
+	}
+	
+	var url = '//pi.myshp.us/myshp?';
+	this._cfg.id = this._cfg.layerid;
+	var objId = this.myshpID();
+	
+	if(type == 'pbyc'){
+		this._cfg.key = globalNWTrk.getCookie('rat_nw_trk_prod');
+	}else if(type == 'best'){
+		this._cfg.key = 'koost';
+	}else if(type == 'power_best'){
+		this._cfg.key = 'hotkoost';
+	}else if(type == 'new'){
+		this._cfg.key = 'newkoost';
+	}else if(type == 'pbyk'){
+		try{
+			if(section.ktype == 'f'){
+				this._cfg.key = section.keyword;
+			}else{
+				if(globalNWTrk._isDemo == true){
+					this._cfg.key = 'koost';
+				}else{
+					this._cfg.key = eval(section.keyword);
+				}
+			}
+			if(this._cfg.key == null || this._cfg.key.length == 0) return;
+		}catch(e){
+			return;
+		}
+	}else if(type == 'pbyp'){
+		try{
+			if(section.ktype == 'f'){
+				this._cfg.key = section.keyword;
+			}else if(section.ktype == 'p'){
+				this._cfg.key = globalNWTrk.getParameter(section.keyword);
+			}else{
+				this._cfg.key = eval(section.keyword);
+			}
+		}catch(e){
+			return;
+		}
+	}else{
+		return;
+	}
+	
+
+	url += '&key='+encodeURIComponent(this._cfg.key);
+	url += '&type='+type;
+	
+	url += '&url='+encodeURIComponent(detail_url);
+	url += '&title='+encodeURIComponent(title);
+	url += '&iw='+iw;
+	url += '&ih='+ih;
+	
+	url += '&ratid='+_myshpRatKey;
+	url += '&channel='+this._cfg.channel_id;
+	url += '&myid='+objId;
+	url += '&style=' + tcode;
+	url += '&temp=' + temp;
+
+	try {
+		var obj = document.createElement('iframe');
+		obj.setAttribute('id', objId+'iframe');
+		obj.setAttribute('style', 'width:1px;min-width:100%;*width:100%;height:0;border:none;')
+		//obj.style.width = '1px';
+		//obj.style.minWidth = '100%';
+		//obj.style.height = '0';
+		//obj.style.border = 'none';
+		obj.scrolling = 'no';
+		obj.src = url;
+		document.getElementById(this._cfg.id).appendChild(obj)
+		
+	} catch(e) {
+		console.log(e)
+	}
+}
+
+RatNWTrk.prototype.MyshpRecommendView.prototype.loadView2 = function()
+{	
+	var url = '//pi.myshp.us/myshp?';
+	this._cfg.id = this._cfg.layerid;
+	_myshpLayerId = this._cfg.layerid;
+	//var objId = this.myshpID();
+	var objId = 'ifr_' + this._cfg.layerid;
+	
+	var channel = this._cfg.section_id;
+	var tcode = 'p2';
+	if(this._cfg.type == 'kbyk' || this._cfg.type == 'kbyp'){
+		if(this._cfg.platform == 'mobile'){
+			tcode = 'mk';
+		}else{
+			tcode = 'pk';
+		}
+	}else{
+		if(this._cfg.platform == 'mobile'){
+			tcode = 'm1';
+		}
+	}
+	
+	if(this._cfg.type == 'pbyc'){
+		this._cfg.key = globalNWTrk.getCookie('rat_nw_trk_prod');
+	}else if(this._cfg.type == 'best'){
+		this._cfg.key = 'koost';
+	}else if(this._cfg.type == 'power_best'){
+		this._cfg.key = 'hotkoost';
+	}else if(this._cfg.type == 'new'){
+		this._cfg.key = 'newkoost';
+	}else if(this._cfg.type == 'pbyk'){
+		//this._cfg.key = this._cfg.item;
+	}else if(this._cfg.type == 'pbyp'){
+		//this._cfg.key = this._cfg.item;
+	}else if(this._cfg.type == 'kbyp'){
+		//this._cfg.key = this._cfg.item;
+	}else if(this._cfg.type == 'kbyk'){
+		//this._cfg.key = this._cfg.item;
+	}else{
+		return;
+	}
+	
+
+	url += '&key='+encodeURIComponent(this._cfg.key);
+	url += '&type='+this._cfg.type;
+	
+	url += '&url='+encodeURIComponent(this._cfg.url);
+	url += '&title='+encodeURIComponent(this._cfg.title);
+	url += '&iw=1';
+	url += '&ih=1';
+	
+	url += '&ratid='+_myshpRatKey;
+	url += '&channel='+channel;
+	url += '&myid='+objId;
+	url += '&style=' + tcode;
+	url += '&temp=0';
+	if(typeof this._cfg.membership != "undefined"){
+		url += '&membership=' + this._cfg.membership;
+	}
+	if(typeof this._cfg.clr != "undefined"){
+		url += '&clr=' + encodeURIComponent(this._cfg.clr);
+	}
+
+	try {
+		var obj = document.createElement('iframe');
+		obj.setAttribute('id', objId+'iframe');
+		obj.setAttribute('style', 'width:1px;min-width:100%;*width:100%;height:0;border:none;')
+		//obj.style.width = '1px';
+		//obj.style.minWidth = '100%';
+		//obj.style.height = '0';
+		//obj.style.border = 'none';
+		obj.scrolling = 'no';
+		obj.src = url;
+		document.getElementById(this._cfg.id).appendChild(obj)
+		
+	} catch(e) {
+		console.log(e)
+	}
+}
+
+RatNWTrk.prototype.MyshpRecommendView.prototype.myshpID = function () {
+	// Math.random should be unique because of its seeding algorithm.
+	// Convert it to base 36 (numbers + letters), and grab the first 9 characters
+	// after the decimal.
+	return '_' + Math.random().toString(36).substr(2, 9);
+}

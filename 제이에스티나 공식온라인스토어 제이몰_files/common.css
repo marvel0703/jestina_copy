@@ -1,0 +1,757 @@
+@charset "utf-8";
+
+
+/* 별점 */
+.star_rating {
+  display: block;
+  width: 67px;
+  height: 14px;
+  background: url('/content/image/common/bg_starpoint_off.png') 0 0 no-repeat;
+  color: #999;
+  margin-right: 5px;
+  float: left;
+}
+
+.star_rating span {
+  display: block;
+  height: 14px;
+  background: url('/content/image/common/bg_starpoint_on.png') 0 0 no-repeat;
+}
+
+.star_rating .point {
+  display: none;
+}
+
+.star_rating .point {
+  display: none;
+}
+
+@media print {
+  .star_rating span {
+    display: none;
+  }
+}
+
+
+/* ROUNDED ONE */
+.roundedOne {
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: #fcfff4;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  position: relative;
+  border: 1px solid #d6d6d6;
+}
+
+.roundedOne label {
+  cursor: pointer;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  left: 0;
+  top: 0;
+  background: #fff;
+}
+
+.roundedOne label:after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #19aff4;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  top: 2px;
+  left: 2px;
+}
+
+.roundedOne label:hover::after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+
+.roundedOne input[type=radio]:checked + label:after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
+
+.roundedOne input[type=radio]:focus {
+  border: 0 !important;
+}
+
+
+/* ROUNDED Two */
+.roundedTwo {
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  background: #fcfff4;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  position: relative;
+
+}
+
+.roundedTwo label {
+  cursor: pointer;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  left: 0;
+  top: 0;
+  background: #fff;
+  border: 1px solid #d6d6d6;
+}
+
+.roundedTwo label:after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #19aff4;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  top: 2px;
+  left: 2px;
+}
+
+.roundedTwo label:hover::after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+
+.roundedTwo input[type=radio]:checked + label:after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
+
+.roundedTwo input[type=radio]:focus {
+  border: 0 !important;
+}
+
+
+/* SQUARED ONE */
+.squaredOne {
+  display: inline-block;
+  min-width: 26px;
+  height: 26px;
+  position: relative;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.squaredOne label {
+  cursor: pointer;
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 0;
+  top: 0;
+  background: #fff;
+  border: 1px solid #d6d6d6;
+}
+
+.squaredOne label:after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background: url(/content/image/icon/check-on.gif) no-repeat 0 0;
+  top: 0;
+  left: 0;
+}
+
+.squaredOne label:hover::after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+
+.squaredOne input[type=checkbox]:checked + label:after {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
+
+
+/* noline */
+.noline_bottom {
+  border-bottom: 0 !important;
+}
+
+/* 상태 라벨 */
+.icon_answer {
+  display: inline-block;
+  min-width: 74px;
+  height: 26px;
+  line-height: 24px;
+  padding: 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: -1px;
+}
+
+.answer_ing {
+  color: #666;
+  border: 1px solid #c9c9c9;
+}
+
+.answer_end {
+  color: #23ade3;
+  border: 1px solid #23ade3;
+}
+
+
+/* 상품 Q&A | 이용후기 */
+.view-off {
+  display: none;
+}
+
+#dimmed, #loading-dimmed {
+  display: none !important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  filter: alpha(opacity=40);
+  background: #000;
+  background: rgba(0, 0, 0, .4);
+  z-index: 1500;
+}
+
+
+/*
+bxSlider 교체 후 임시적용 - skc_2017-06-05
+*/
+.bx-pager {
+  display: none
+}
+
+
+/* SKC */
+.text-right {
+  text-align: right !important;
+}
+
+.text-right.mypage {
+  border-right: 1px solid #f1f1f1;
+}
+
+/* S: 190123 예약 상품 관리 */
+.product-view-container .product-preview {
+  float: left;
+  width: 616px;
+  position: relative;
+}
+
+/* E: 190123 예약 상품 관리 */
+
+
+/* S: 190123 예약 상품 관리 */
+.product-view-container .product-reserveView {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 240px;
+  width: 100px;
+  height: 100px;
+  background-color: #ffb2b8;
+  border-radius: 50%;
+  margin-left: -19px;
+}
+
+.product-view-container .reserveView-wrap {
+  text-align: center;
+  color: #ffffff;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 5px;
+  margin-left: 5px;
+  font-family: 'notokr-light';
+  font-size: 15px;
+  width: 90px;
+  height: 90px;
+  background-color: #ffb2b8;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-sizing: border-box;
+}
+
+.product-view-container .reserveView-wrap span {
+  margin-top: 26px;
+  display: inline-block;
+}
+
+/* E: 190123 예약 상품 관리 */
+
+/* S: 190123 예약 상품 관리 */
+.item-label .label-hot {
+  background-color: #c94958;
+}
+
+.item-label .label-new {
+  background-color: #f5426c;
+}
+
+.item-label .label-recommend {
+  background-color: #6c33ca;
+}
+
+.item-label .label-default {
+  background-color: #4f2f84;
+}
+
+.item-label .label-custom {
+  background-color: #784b50;
+  width: 54px;
+}
+
+.item-label .label-stamp {
+  background-color: #64842f;
+  width: 54px;
+}
+
+.item-label .label-reserve {
+  background-color: #4f8fbd;
+  width: 54px;
+}
+
+.item-label .label-stampEvent {
+  background-color: #2f6484;
+  width: 78px;
+
+}
+
+.reserve-wrap .reserve-wrap-txt {
+  display: inline-block;
+  width: 100%;
+  line-height: 30px;
+  font-weight: bold;
+}
+
+.reserve-wrap .icon-clock {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0;
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+  background: url("https://webimg.jestina.co.kr/Updata/renew/image/img_clock.png");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+/* E: 190123 예약 상품 관리 */
+
+
+/* S: 190214 메인페이지 배너 추가 */
+.floatbar .link-banner.snbHoverLayer-open {
+  margin-top: 18px;
+  -ms-transform: scale(0);
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  transition: all 0.8s;
+}
+
+.floatbar .link-banner.snbHoverLayer-open.active {
+  transform: scale(1);
+  -ms-transform: scale(1);
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  transform-origin: top right;
+  transition: all 0.8s;
+}
+
+.snbHoverLayer--wrapper {
+  transform: scale(0);
+  -ms-transform: scale(0);
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  transform-origin: top right;
+  transition: all 0.8s;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 20;
+  margin-top: 260px;
+}
+
+.snbHoverLayer--wrapper.active {
+  -ms-transform: scale(1);
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  transition: all 0.8s;
+}
+
+.snbHoverLayer--wrapper .layer-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+/* E: 190214 메인페이지 배너 추가 */
+
+/*onlinepowers-20190507-start*/
+
+/* S: 190422 컬러칩 옵션 추가 */
+.product-view-container .colorChip-preview {
+  display: none;
+  float: left;
+  width: 616px;
+  position: relative;
+}
+
+.product-view-container .colorChip-preview:after {
+  clear: both;
+  display: block;
+  content: "";
+  overflow: hidden;
+  height: 0
+}
+
+.product-view-container .colorChip-preview .productThumbs-wrap {
+  float: left;
+  width: 52px;
+  margin-right: 14px;
+  position: relative
+}
+
+.product-view-container .colorChip-preview .productThumbs-wrap .colorChip-swiper-container {
+  margin: 6px 0;
+  height: 168px;
+}
+
+.product-view-container .colorChip-preview .productThumbs-wrap .swiper-slide1:first-child {
+  margin-top: 0
+}
+
+.product-view-container .colorChip-preview .productThumbs-wrap .swiper-slide {
+  width: 52px;
+  height: 52px;
+}
+
+.product-view-container .colorChip-preview .productThumbs-wrap .swiper-slide .thumbs {
+  padding: 1px;
+  box-sizing: border-box;
+  overflow: hidden;
+  width: 52px;
+  height: 52px;
+}
+
+.product-view-container .colorChip-preview .productThumbs-wrap .swiper-slide.on .thumbs {
+  border: 1px solid #adadad;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0
+}
+
+.product-view-container .colorChip-preview .productThumbs-wrap .swiper-slide .thumbs a {
+  display: block;
+}
+
+.product-view-container .colorChip-preview .product-view-gallery {
+  float: right;
+  width: 550px;
+  margin-bottom: 17px;
+}
+
+.product-view-container .colorChip-preview .product-view-gallery img {
+  display: none;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion {
+  width: 550px;
+  float: right;
+  clear: both;
+  border-top: 1px solid #dfdfdf;
+  border-bottom: 1px solid #dfdfdf;
+  position: relative
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul.product-view-promotion-list > li {
+  border-top: 1px dotted #8f8f8f;
+  line-height: 24px;
+  padding: 6px 0;
+  position: relative
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul.product-view-promotion-list > li:first-child {
+  border-top: 0
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul.product-view-promotion-list > li .more-text {
+  display: none;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul.product-view-promotion-list > li:after {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  content: "";
+  height: 0
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul.product-view-promotion-list > li a {
+  color: #666666;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul.product-view-promotion-list > li a:hover {
+  color: #ffb2b8
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul.product-view-promotion-list > li a.btn-promotion {
+  display: none;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion a.btn-promotion {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  display: block;
+  width: 9px;
+  right: 9px;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion a.btn-promotion i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: url(../images/ico/ico_preview_open.png) no-repeat right center;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion a.btn-promotion.open i {
+  background: url(../images/ico/ico_preview_close.png) no-repeat right center;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li strong {
+  float: left;
+  width: 110px;
+  padding-left: 10px;
+  font-size: 12px;
+  color: #353535;
+  font-weight: 400;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li span {
+  float: right;
+  width: 430px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li span:before {
+  margin-right: 5px;
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1px;
+  vertical-align: middle;
+  background: #666;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li .more-text span:before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1px;
+  vertical-align: middle;
+  background: #ffb2b8;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li .promotion-list ul {
+  float: right;
+  width: 430px;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li .promotion-list ul:after {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  content: "";
+  height: 0
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li .promotion-list ul li {
+  display: none;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li .promotion-list ul li:first-child {
+  display: block;
+}
+
+.product-view-container .colorChip-preview .product-view-promotion > ul > li .promotion-list:after {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  content: "";
+  height: 0
+}
+
+.option-colorChip-wrap {
+  padding: 8px 0 8px 0 !important;
+}
+
+.option-colorChip-wrap dt {
+  margin-top: 5px;
+}
+
+.option-colorChip-list {
+  width: 350px;
+  overflow: hidden;
+  margin-left: 0 !important;
+}
+
+.option-colorChip-item {
+  float: left;
+  padding: 5px;
+  border: 2px solid #f5f3f0;
+  margin: 5px 10px 5px 0;
+  box-sizing: border-box;
+  text-align: center;
+  width: 38px !important;
+  height: 38px !important;
+}
+
+.option-colorChip-item-all {
+  line-height: 22px;
+  font-family: 'notokr-bold';
+  color: #383838;
+}
+
+.option-colorChip-item.on {
+  border: 2px solid #383838;
+}
+
+.option-colorChip-item-select {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-top;
+  margin-left: 3px;
+}
+
+.option-colorChip-item img {
+  width: 24px;
+  height: 24px;
+}
+
+.product-view-container .btn-colorChipOption-add {
+  background-color: #383838;
+  color: #ffffff;
+  margin: 5px;
+  margin-left: 118px;
+  padding: 0 17px;
+  line-height: 24px;
+  font-size: 12px;
+}
+
+.product-view-container .btn-colorChipOption-add {
+  background-color: #383838;
+  color: #ffffff;
+  margin: 5px;
+  margin-left: 118px;
+  padding: 0 17px;
+  line-height: 24px;
+  font-size: 12px;
+}
+
+/* E: 190422 컬러칩 옵션 추가 */
+
+/*onlinepowers-20190524-start*/
+/* S: 190524 컬러칩 옵션명 노출 */
+.product-view-container .colorChip-option-txt {
+  color: #9c9a95 !important;
+  line-height: 24px !important;
+  width: 200px !important;
+  float: none !important;
+  display: inline-block !important;
+}
+
+/* E: 190524 컬러칩 옵션명 노출 */
+/*onlinepowers-20190524-end*/
+
+
+.product-view-container .product-preview .color-chip-thumbs-wrap {
+  float: left;
+  width: 52px;
+  margin-right: 14px;
+  position: relative
+}
+
+.product-view-container .product-preview .color-chip-thumbs-wrap .preview-color-chip-swiper-container {
+  margin: 6px 0;
+  height: 168px;
+}
+
+.product-view-container .product-preview .color-chip-thumbs-wrap .swiper-slide1:first-child {
+  margin-top: 0
+}
+
+.product-view-container .product-preview .color-chip-thumbs-wrap .swiper-slide {
+  width: 52px;
+  height: 52px;
+}
+
+.product-view-container .product-preview .color-chip-thumbs-wrap .swiper-slide .thumbs {
+  padding: 1px;
+  box-sizing: border-box;
+  overflow: hidden;
+  width: 52px;
+  height: 52px;
+}
+
+.product-view-container .product-preview .color-chip-thumbs-wrap .swiper-slide.on .thumbs {
+  border: 1px solid #adadad;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0
+}
+
+.product-view-container .product-preview .color-chip-thumbs-wrap .swiper-slide .thumbs a {
+  display: block;
+}
+
+.product-view-container .product-preview .color-chip-view-gallery {
+  float: right;
+  width: 550px;
+  margin-bottom: 17px;
+}
+
+.product-view-container .product-preview .color-chip-view-gallery img {
+  width: 100%;
+}
+
+/*onlinepowers-20190507-end*/

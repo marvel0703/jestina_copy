@@ -1,0 +1,218 @@
+/**
+ * Created by So Ra Jeon on 2020
+ * Corp : J.ESTINA
+ * https://www.jestina.co.kr/
+ */
+ @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+* {
+  font-family: "Malgun Gothic", "맑은 고딕", sans-serif !important;
+  font-weight: normal;
+  letter-spacing: -0.5px;
+}
+
+.offline-maps-store-header-title-area .checkbox label {
+  display: none;
+}
+
+ul#outlet-list-data {
+  width: 1140px;
+  margin: 0 auto;
+}
+
+.mypage-section .goods-list ul li .goods-img-wrap,
+.product-category-list .goods-list ul li .goods-img-wrap,
+.magazine-tab-section .goods-list ul li .goods-img-wrap {
+  height: 270px !important;
+}
+
+.mypage-container .goods-list ul li {
+  min-height: 521px;
+}
+
+.product-list ul li,
+.goods-list ul li {
+  margin-right: 8px !important;
+}
+
+.popup-area .goods-list ul li {
+  width: 187px !important;
+}
+
+.popup-area .goods-list ul li .goods-img-wrap {
+  height: 220px !important;
+}
+
+.search-container .goods-list ul li {
+  height: 420px;
+}
+
+.search-container .goods-list ul li .goods-img-wrap {
+  height: 270px !important;
+}
+
+.hd-gnb__wrap .hd-nav__wrap ul li:nth-child(1) a {
+  /*NEW 페이지가 없어서*/
+  font-size: 15px;
+  color: #333;
+}
+
+.join-step-list table td p {
+  font-size: 12px;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+}
+
+input:focus,
+input:hover,
+input:active {
+  outline: none;
+  color: #333;
+  background: transparent;
+}
+
+.styled-input-message {
+  font-size: 13px;
+  text-align: left;
+}
+
+.login-content .r-login-content {
+  width: 385px !important;
+  text-align: left;
+}
+
+.couponbook-content .couponbook-container .couponbook-list li {
+  width: 49%;
+}
+
+.couponbook-content
+  .couponbook-container
+  .couponbook-list
+  li:nth-child(2n + 0) {
+  margin-left: 1% !important;
+}
+
+.payment-section-header .checkbox {
+  position: relative !important;
+  float: right;
+}
+
+.checkbox input[type="checkbox"],
+.checkbox input[type="radio"] {
+  display: inline-block !important;
+  width: auto !important;
+}
+
+.payment-point .checkbox span {
+  margin-left: 0 !important;
+}
+
+.deliveryaddress-section-header {
+  padding: 10px 20px 12px 20px !important;
+}
+
+.deliveryaddress-section-header .checkbox {
+  position: relative !important;
+  float: right;
+  margin-top: -30px;
+}
+
+#use-this-name {
+  margin-left: 10px;
+}
+
+.styled-form-agreement-item-list
+  .styled-form-agreement-item-group
+  .checkbox
+  label {
+  width: auto !important;
+}
+
+.goods-list ul li .goods-img-wrap {
+  height: 270px !important;
+}
+
+/*팝업*/
+.main-layout-popup {
+  top: 60vh !important;
+  left: 2vw !important;
+  max-width: 296px !important;
+}
+
+.main-layout-popup .layout-popup-content img {
+  width: 100%;
+}
+
+.main-layout-popup .close-btns {
+  background-color: transparent !important;
+}
+
+.main-layout-popup .close-btns a {
+  font-weight: bold;
+}
+
+/*퀵배너*/
+.floatbar .link-banner img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/*메인 동영상 영역 */
+.main .video-section {
+  /*background: url('https://webimg.jestina.co.kr/UpData/jestina/jewelry/201116_merryPinkMas/201116_pc_videoBg.jpg') no-repeat 50% 50%;*/
+}
+
+.video-section .section-hd .section-title,
+.video-section .section-hd .section-desc {
+  display: none !important;
+}
+.exhibitions-section .onedayPick-item .wedPick__desc{height:302px!important}
+.exhibitions-section .onedayPick-item {background-image:url("https://webimg.jestina.co.kr/UpData/jestina/wedPick/220419/onePick_banner.jpg")!important;}
+/* 20220303_ 추가  __ .wedPick-item 을 .onedayPick-item 로 임시 변경한 상태, 필요시 다시 원복 */
+.exhibitions-section .onedayPick-item.dpNone {display: none}
+.exhibitions-section .onedayPick-item.active {display: block}
+.exhibitions-section .onedayPick-item .onedayPick-item__thumb{display:none!important}
+.exhibitions-section .basic-wedPick__item .wedPick__desc .wedPick__desc-inner{display:none}
+.exhibitions-section .basic-wedPick__item .wedPick__desc .wedPick__desc-inner{padding:15px 20px!important}
+.exhibitions-section .onedayPick-item .wedPick-count{top: 79px !important; left: 113px!important}
+.exhibitions-section .onedayPick-item .wedPick-count ul{margin-left:0!important}
+.exhibitions-section .onedayPick-item .wedPick-count ul li{margin:0!important;font-size:32px!important;font-family: 'Montserrat', sans-serif!important}
+.exhibitions-section .onedayPick-item .wedPick-count ul li:after{color:#a9a9a9!important;margin:0 12px!important;vertical-align:text-top!important}
+.exhibitions-section .onedayPick-item .wedPick__desc .discount-num{right:48px!important;display:none!important}
+
+.wedPick-popup__wrap .wedPick-count ul{margin-left:80px}
+.wedPick-popup__wrap .wedPick-count ul li{color:#fff!important;font-weight:bold!important;font-size:27px!important;font-family: 'Montserrat', sans-serif!important}
+.wedPick-popup__wrap .wedPick-count ul li:after{margin:0 11px!important;color:#a9a9a9!important}
+.exhibitions-section .onedayPick-item .wedPick-count ul li{color:#383838!important}
+.exhibitions-section .onedayPick-item .wedPick__desc strong {color:#fff!important}
+.exhibitions-section .onedayPick-item .wedPick__desc .price,
+.exhibitions-section .basic-wedPick__item .wedPick__desc span,
+.exhibitions-section .basic-wedPick__item .wedPick__desc span.origin-price{color:#fff!important}
+/*팝업*/
+.wedPick-popup__wrap .wedPick-count{top: 100px !important; left:9%!important}
+.wedPick-popup__wrap .wedPick-count ul li{color:#383838!important;font-size:23px!important}
+
+.wedPick-section.basic-wedPick-section .wedPick-subtitle {
+  font-size: 40px;
+  line-height: 50px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.wedPick-popup__wrap {
+  top: 40% !important;
+}
+
+.wedPick-popup__wrap .wedPick-close__btn {
+  top: -30px !important;
+  right: 0px !important;
+  padding-top: 5px;
+  padding-right: 10px;
+  width: 25px;
+  height: 25px;
+  text-align:right;
+  font-size: 0 !important;
+  background: url("https://webimg.jestina.co.kr/UpData/jestina/wedPick/wedPick_close__btn_PC.png") no-repeat center;
+  background-size: 13px auto;
+}
